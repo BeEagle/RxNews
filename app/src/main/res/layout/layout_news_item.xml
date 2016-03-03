@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/iv_img"
+        android:layout_width="90dip"
+        android:layout_height="65dip"
+        android:padding="1dp"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8.0dip"
+        android:layout_toRightOf="@id/iv_img"
+        android:maxLines="3"
+        tools:text="标题"
+        android:layout_marginTop="2dp"
+        android:textSize="17sp" />
+
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:singleLine="true"
+        android:layout_below="@id/tv_title"
+        android:layout_toRightOf="@id/iv_img"
+        android:layout_marginTop="8dp"
+        tools:text="标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题"
+        android:textSize="17sp" />
+
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:text="2016-02-25 11:22:23"
+        android:layout_below="@+id/tv_content"
+        android:layout_alignParentRight="true"
+        android:textColor="#828282"
+        android:textSize="14sp" />
+
+</RelativeLayout>
