@@ -4,7 +4,7 @@ import com.yuqirong.rxnews.app.Constant;
 
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
-import retrofit2.converter.jackson.JacksonConverterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 /**
@@ -18,7 +18,7 @@ public class RxNewsClient {
 
        Retrofit mRetrofit = new Retrofit.Builder()
                                 .baseUrl(Constant.BASE_URL)
-                                .addConverterFactory(JacksonConverterFactory.create())
+                                .addConverterFactory(GsonConverterFactory.create())
                                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                                 .build();
         mRxNewsAPI = mRetrofit.create(RxNewsAPI.class);

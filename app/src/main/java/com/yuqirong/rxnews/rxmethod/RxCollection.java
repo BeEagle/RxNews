@@ -55,4 +55,8 @@ public class RxCollection {
         getCompositeSub(taskId).add(RxNews.getNews(type, id, startPage));
     }
 
+    public void getNewsDetail(int taskId, String id, String postId) {
+        getCompositeSub(taskId).add(RxNews.getNewsDetail(id, postId));
+    }
+
 }

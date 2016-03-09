@@ -7,8 +7,10 @@ import com.yuqirong.greendao.ResultEntity;
 import com.yuqirong.greendao.ResultEntityDao;
 import com.yuqirong.rxnews.app.AppService;
 import com.yuqirong.rxnews.app.Constant;
+import com.yuqirong.rxnews.event.NewsDetailEvent;
 import com.yuqirong.rxnews.event.NewsEvent;
-import com.yuqirong.rxnews.model.News;
+import com.yuqirong.rxnews.module.model.bean.News;
+import com.yuqirong.rxnews.module.model.bean.NewsDetail;
 
 import java.util.List;
 import java.util.Map;
@@ -29,6 +31,12 @@ public class RxNews {
 
     private static final String TAG = "RxNews";
 
+    /**
+     * 得到news列表的缓存
+     *
+     * @param id
+     * @return
+     */
     public static Subscription initNews(final String id) {
         Subscription subscription = Observable.create(new Observable.OnSubscribe<List<News>>() {
 
@@ -68,6 +76,14 @@ public class RxNews {
         return subscription;
     }
 
+    /**
+     * 得到实时的新闻列表
+     *
+     * @param type
+     * @param id
+     * @param startPage
+     * @return
+     */
     public static Subscription getNews(final String type, final String id, int startPage) {
         Subscription subscription = AppService.getInstance().getRxNewsAPI().getNews(type, id, startPage)
                 .subscribeOn(Schedulers.io())
@@ -97,7 +113,7 @@ public class RxNews {
                 .subscribe(new Subscriber<List<News>>() {
                     @Override
                     public void onCompleted() {
-                        Log.i(TAG, "onCompleted");
+                        Log.i(TAG, "getNews onCompleted");
                     }
 
                     @Override
@@ -123,6 +139,60 @@ public class RxNews {
         return subscription;
     }
 
+    /**
+     * 得到新闻的详情
+     *
+     * @param id
+     * @param postId
+     * @return
+     */
+    public static Subscription getNewsDetail(final String id, final String postId) {
+        Subscription subscription = AppService.getInstance().getRxNewsAPI().getNewsDetail(postId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(new Func1<Map<String, NewsDetail>, NewsDetail>() {
+
+                    @Override
+                    public NewsDetail call(Map<String, NewsDetail> stringNewsDetailMap) {
+                        return stringNewsDetailMap.get(postId);
+                    }
+                })
+                .subscribe(new Subscriber<NewsDetail>() {
+
+                    @Override
+                    public void onCompleted() {
+                        Log.i(TAG, "getNewsDetail onCompleted");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.i(TAG, "error : " + e.getMessage());
+                        NewsDetailEvent event = new NewsDetailEvent(id, null);
+                        AppService.getInstance().getEventBus().post(event);
+                    }
+
+                    @Override
+                    public void onNext(NewsDetail newsDetail) {
+                        NewsDetailEvent event;
+                        if (newsDetail == null) {
+                            event = new NewsDetailEvent(id, null);
+                            event.setResult(Constant.Result.FAIL);
+                        } else {
+                            event = new NewsDetailEvent(id, newsDetail);
+                            event.setResult(Constant.Result.SUCCESS);
+                        }
+                        AppService.getInstance().getEventBus().post(event);
+                    }
+                });
+        return subscription;
+    }
+
+    /**
+     * 缓存新闻
+     *
+     * @param json
+     * @param id
+     */
     // 缓存数据
     private static void cacheNews(String json, String id) {
         ResultEntityDao dao = AppService.getInstance().getResultEntityDao();
@@ -134,7 +204,12 @@ public class RxNews {
         dao.insert(resultEntity);
     }
 
-    // 从缓存中读取数据
+    /**
+     * 从缓存中读取数据
+     *
+     * @param id
+     * @return
+     */
     private static List<News> getCacheNews(String id) {
         ResultEntityDao dao = AppService.getInstance().getResultEntityDao();
         // 查询

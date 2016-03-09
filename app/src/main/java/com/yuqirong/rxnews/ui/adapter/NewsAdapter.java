@@ -10,12 +10,14 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.yuqirong.rxnews.R;
-import com.yuqirong.rxnews.model.News;
+import com.yuqirong.rxnews.module.model.bean.News;
 
 /**
  * Created by Administrator on 2016/2/25.
  */
 public class NewsAdapter extends LoadMoreAdapter<News> {
+
+    private OnItemClickListener listener;
 
     @Override
     public RecyclerView.ViewHolder createCustomViewHolder(ViewGroup parent, int viewType) {
@@ -25,12 +27,21 @@ public class NewsAdapter extends LoadMoreAdapter<News> {
     }
 
     @Override
-    public void bindCustomViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void bindCustomViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         ViewHolder mViewHolder = (ViewHolder) holder;
         News news = getList().get(position);
         mViewHolder.tv_title.setText(news.title);
         mViewHolder.tv_time.setText(news.ptime);
-        Glide.with(mViewHolder.mContext).load(news.imgsrc).centerCrop().placeholder(R.drawable.thumbnail_default).crossFade().into(mViewHolder.iv_img);
+        Glide.with(mViewHolder.mContext).load(news.imgsrc).centerCrop()
+                .placeholder(R.drawable.thumbnail_default).crossFade().into(mViewHolder.iv_img);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onItemClick(v, position);
+                }
+            }
+        });
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -50,6 +61,16 @@ public class NewsAdapter extends LoadMoreAdapter<News> {
             tv_time = (TextView) itemView.findViewById(R.id.tv_time);
         }
 
+    }
+
+    public interface OnItemClickListener {
+
+        public void onItemClick( View itemView, int position);
+
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
     }
 
 }

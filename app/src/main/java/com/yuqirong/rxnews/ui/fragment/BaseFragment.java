@@ -1,6 +1,7 @@
 package com.yuqirong.rxnews.ui.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -36,6 +37,10 @@ public abstract class BaseFragment extends Fragment {
 
     public int getTaskId() {
         return mTaskId;
+    }
+
+    public View getRootView() {
+        return rootView;
     }
 
     /**
@@ -102,4 +107,16 @@ public abstract class BaseFragment extends Fragment {
         AppService.getInstance().getEventBus().unregister(this);
         MyApplication.getRefWatcher().watch(this);
     }
+
+    public void startActivity(Class clazz, String name, Bundle bundle) {
+        Intent intent = new Intent(mContext, clazz);
+        intent.putExtra(name, bundle);
+        startActivity(intent);
+    }
+
+    public void startActivity(Class clazz) {
+        Intent intent = new Intent(mContext, clazz);
+        startActivity(intent);
+    }
+
 }

@@ -1,4 +1,4 @@
-package com.yuqirong.rxnews.model;
+package com.yuqirong.rxnews.module.model.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
