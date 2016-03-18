@@ -1,14 +1,11 @@
 package com.yuqirong.rxnews.ui.fragment;
 
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v7.widget.Toolbar;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
+import android.text.Html;
+import android.view.View;
+import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.yuqirong.rxnews.R;
 import com.yuqirong.rxnews.app.Constant;
 import com.yuqirong.rxnews.event.NewsDetailEvent;
@@ -17,23 +14,17 @@ import com.yuqirong.rxnews.module.presenter.NewsDetailPresenter;
 import com.yuqirong.rxnews.module.view.INewsDetailView;
 
 import butterknife.Bind;
+import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 
 /**
  * Created by Anyway on 2016/3/9.
  */
 public class NewsDetailFragment extends BaseFragment implements INewsDetailView {
 
-    @Bind(R.id.mCoordinatorLayout)
-    CoordinatorLayout mCoordinatorLayout;
-    @Bind(R.id.mCollapsingToolbarLayout)
-    CollapsingToolbarLayout mCollapsingToolbarLayout;
-    @Bind(R.id.iv_album)
-    ImageView iv_album;
-    @Bind(R.id.mToolbar)
-    Toolbar mToolbar;
-    @Bind(R.id.webLayout)
-    FrameLayout webLayout;
-
+    @Bind(R.id.mProgressBar)
+    MaterialProgressBar mProgressBar;
+    @Bind(R.id.tv_content)
+    TextView tv_content;
 
     NewsDetailPresenter mNewsDetailPresenter;
     private String id;
@@ -45,6 +36,7 @@ public class NewsDetailFragment extends BaseFragment implements INewsDetailView 
 
     @Override
     protected void initView() {
+
         mNewsDetailPresenter = new NewsDetailPresenter(this);
 
     }
@@ -56,8 +48,9 @@ public class NewsDetailFragment extends BaseFragment implements INewsDetailView 
 
     @Override
     protected void initData(Bundle savedInstanceState) {
-        String postId = getArguments().getString("postId");
-        id = getArguments().getString("id");
+        Bundle bundle = getArguments();
+        String postId = bundle.getString("postId");
+        id = bundle.getString("id");
         mNewsDetailPresenter.showNewsDetail(getTaskId(), id, postId);
     }
 
@@ -75,23 +68,18 @@ public class NewsDetailFragment extends BaseFragment implements INewsDetailView 
 
     @Override
     public void showLoading() {
-
+        mProgressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void closeLoading() {
-
+        mProgressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void showSuccess(NewsDetailEvent event) {
         NewsDetail detail = event.getNewsDetail();
-        if (detail.picnews && detail.img.size() > 0) {
-            Glide.with(mContext).load(detail.img.get(0).src).centerCrop()
-                    .placeholder(R.drawable.thumbnail_default).crossFade().into(iv_album);
-        }
-
-
+        tv_content.setText(Html.fromHtml(detail.body));
     }
 
     @Override

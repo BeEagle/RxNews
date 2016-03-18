@@ -2,7 +2,6 @@ package com.yuqirong.rxnews.ui.fragment;
 
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.util.DisplayMetrics;
 import android.view.View;
 
 import com.yuqirong.rxnews.R;
@@ -19,7 +18,7 @@ import butterknife.Bind;
 import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 
 /**
- * Created by Administrator on 2016/2/24.
+ * Created by yuqirong on 2016/2/24.
  */
 public class MainFragment extends BaseFragment implements INewsView, NewsAdapter.OnItemClickListener {
 
@@ -121,23 +120,13 @@ public class MainFragment extends BaseFragment implements INewsView, NewsAdapter
 
     @Override
     public void onItemClick(View itemView, int position) {
-        // 得到状态栏的高度
-        DisplayMetrics dm = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-        int topOffset = dm.heightPixels - getRootView().getMeasuredHeight();
-
-        int[] startingLocation = new int[2];
-        itemView.getLocationOnScreen(startingLocation);
-        startingLocation[0] += itemView.getWidth() / 2;
-        startingLocation[1] = startingLocation[1] - topOffset + itemView.getHeight() / 2;
-
         Bundle bundle = new Bundle();
-        bundle.putString("id", id);
-        bundle.putString("postId", mNewsAdapter.getList().get(position).postid);
-        bundle.putIntArray(NewsDetailActivity.ARG_REVEAL_START_LOCATION, startingLocation);
-        startActivity(NewsDetailActivity.class, "location", bundle);
+        bundle.putString("id", id); // id
+        bundle.putString("title",mNewsAdapter.getList().get(position).title); // 标题
+        bundle.putString("postId", mNewsAdapter.getList().get(position).postid); // 专辑id
+        bundle.putString("imgsrc",mNewsAdapter.getList().get(position).imgsrc); // 图片url
 
-        getActivity().overridePendingTransition(0, 0);
+        startActivity(NewsDetailActivity.class, "params", bundle);
     }
 
 }

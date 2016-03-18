@@ -24,6 +24,7 @@
             android:id="@+id/mTabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:tabMode="fixed"
             android:background="@color/colorPrimary" />
 
     </android.support.design.widget.AppBarLayout>

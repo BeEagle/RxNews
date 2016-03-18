@@ -15,7 +15,7 @@ import com.yuqirong.rxnews.app.MyApplication;
 import butterknife.ButterKnife;
 
 /**
- * Created by Administrator on 2016/2/24.
+ * Created by yuqirong on 2016/2/24.
  */
 public abstract class BaseFragment extends Fragment {
 
@@ -108,12 +108,22 @@ public abstract class BaseFragment extends Fragment {
         MyApplication.getRefWatcher().watch(this);
     }
 
-    public void startActivity(Class clazz, String name, Bundle bundle) {
+    /**
+     * 跳转Activity
+     * @param clazz
+     * @param bundleName
+     * @param bundle
+     */
+    public void startActivity(Class clazz, String bundleName, Bundle bundle) {
         Intent intent = new Intent(mContext, clazz);
-        intent.putExtra(name, bundle);
+        intent.putExtra(bundleName, bundle);
         startActivity(intent);
     }
 
+    /**
+     * 跳转Activity
+     * @param clazz
+     */
     public void startActivity(Class clazz) {
         Intent intent = new Intent(mContext, clazz);
         startActivity(intent);

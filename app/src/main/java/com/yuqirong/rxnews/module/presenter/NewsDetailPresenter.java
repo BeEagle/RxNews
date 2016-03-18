@@ -32,10 +32,12 @@ public class NewsDetailPresenter {
     }
 
     public void showSuccess(NewsDetailEvent event) {
+        closeLoading();
         mINewsDetailView.showSuccess(event);
     }
 
     public void showError() {
+        //        clearLoading();
         mINewsDetailView.showError();
     }
 }
