@@ -1,8 +1,6 @@
 package com.yuqirong.rxnews.ui.view;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -34,8 +32,11 @@ public class AutoLoadRecyclerView extends RecyclerView {
     public void setAdapter(Adapter adapter) {
         super.setAdapter(adapter);
         this.adapter = (LoadMoreAdapter) adapter;
-        listener = ((LoadMoreAdapter) adapter).getListener();
+        ((LoadMoreAdapter) adapter).setOnLoadingMoreListener(listener);
+    }
 
+    public void setOnLoadingMoreListener(LoadMoreAdapter.OnLoadingMoreListener listener) {
+        this.listener = listener;
     }
 
     private void initView() {
@@ -61,18 +62,11 @@ public class AutoLoadRecyclerView extends RecyclerView {
                 if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && lastVisibleItem == adapter.getItemCount() - 1 && !adapter.isLoadingMore()) {
                     adapter.setIsLoadingMore(true);
                     if (listener != null) {
-                        handler.sendEmptyMessageDelayed(0, 500);
+                        listener.onLoadingMore();
                     }
                 }
             }
         });
     }
-
-    Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            listener.onLoadingMore();
-        }
-    };
 
 }

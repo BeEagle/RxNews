@@ -5,17 +5,26 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.yuqirong.rxnews.ui.view.AutoLoadRecyclerView
-        android:id="@+id/mRecyclerView"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/mSwipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:cacheColorHint="@null" />
+        android:layout_height="match_parent">
+
+        <com.yuqirong.rxnews.ui.view.AutoLoadRecyclerView
+            android:id="@+id/mRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:cacheColorHint="@null" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <me.zhanghai.android.materialprogressbar.MaterialProgressBar
         android:id="@+id/mProgressBar"
+        style="@style/Widget.MaterialProgressBar.ProgressBar.Large"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:indeterminate="true"
-        style="@style/Widget.MaterialProgressBar.ProgressBar.Large" />
+        android:indeterminate="true" />
+
 </RelativeLayout>

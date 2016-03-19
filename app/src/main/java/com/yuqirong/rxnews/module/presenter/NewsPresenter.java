@@ -28,13 +28,13 @@ public class NewsPresenter {
     }
 
     public void showSuccess(NewsEvent newsEvent) {
-        clearLoading();
         mINewsView.showSuccess(newsEvent);
+        clearLoading();
     }
 
     public void showError() {
-//        clearLoading();
         mINewsView.showError();
+        //        clearLoading();
     }
 
     public void showLoading() {

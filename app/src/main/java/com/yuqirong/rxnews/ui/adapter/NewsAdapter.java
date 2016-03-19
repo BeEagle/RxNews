@@ -31,6 +31,7 @@ public class NewsAdapter extends LoadMoreAdapter<News> {
         ViewHolder mViewHolder = (ViewHolder) holder;
         News news = getList().get(position);
         mViewHolder.tv_title.setText(news.title);
+        mViewHolder.tv_content.setText(news.digest);
         mViewHolder.tv_time.setText(news.ptime);
         Glide.with(mViewHolder.mContext).load(news.imgsrc).centerCrop()
                 .placeholder(R.drawable.thumbnail_default).crossFade().into(mViewHolder.iv_img);
@@ -65,7 +66,7 @@ public class NewsAdapter extends LoadMoreAdapter<News> {
 
     public interface OnItemClickListener {
 
-        public void onItemClick( View itemView, int position);
+        void onItemClick(View itemView, int position);
 
     }
 
