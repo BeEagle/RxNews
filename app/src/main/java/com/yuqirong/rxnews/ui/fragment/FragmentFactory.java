@@ -12,9 +12,9 @@ public class FragmentFactory {
     }
 
     public static Fragment create(String type, String id) {
-        MainFragment mainFragment = new MainFragment();
-        mainFragment.setParams(type, id);
-        return mainFragment;
+        NewsFragment newsFragment = new NewsFragment();
+        newsFragment.setParams(type, id);
+        return newsFragment;
     }
 
 }

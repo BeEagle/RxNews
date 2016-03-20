@@ -1,7 +1,9 @@
 package com.yuqirong.rxnews.ui.fragment;
 
+import android.app.ActivityOptions;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 
@@ -23,7 +25,7 @@ import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 /**
  * Created by yuqirong on 2016/2/24.
  */
-public class MainFragment extends BaseFragment implements INewsView, NewsAdapter.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener, LoadMoreAdapter.OnLoadingMoreListener {
+public class NewsFragment extends BaseFragment implements INewsView, NewsAdapter.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener, LoadMoreAdapter.OnLoadingMoreListener {
 
     @Bind(R.id.mRecyclerView)
     AutoLoadRecyclerView mRecyclerView;
@@ -36,7 +38,7 @@ public class MainFragment extends BaseFragment implements INewsView, NewsAdapter
     private String type;
     private String id;
     private int startPage = 0;
-    private static final String TAG = "MainFragment";
+    private static final String TAG = "NewsFragment";
     public static final int[] SWIPE_REFRESH_LAYOUT_COLOR = new int[]{android.R.color.holo_red_light, android.R.color.holo_orange_light, android.R.color.holo_green_light, android.R.color.holo_blue_bright, android.R.color.holo_purple};
 
 
@@ -44,7 +46,7 @@ public class MainFragment extends BaseFragment implements INewsView, NewsAdapter
 
     @Override
     public int getViewId() {
-        return R.layout.fragment_main;
+        return R.layout.fragment_news;
     }
 
     @Override
@@ -119,6 +121,7 @@ public class MainFragment extends BaseFragment implements INewsView, NewsAdapter
                 mNewsAdapter.notifyDataSetChanged();
                 break;
             case REFRESH:
+                mNewsAdapter.resetAnimPosition(); // 重置animPosition
                 mNewsAdapter.getList().clear();
                 mNewsAdapter.getList().addAll(newsEvent.getNews());
                 mNewsAdapter.notifyDataSetChanged();
@@ -146,7 +149,19 @@ public class MainFragment extends BaseFragment implements INewsView, NewsAdapter
         bundle.putString("postId", mNewsAdapter.getList().get(position).postid); // 专辑id
         bundle.putString("imgsrc", mNewsAdapter.getList().get(position).imgsrc); // 图片url
 
-        startActivity(NewsDetailActivity.class, "params", bundle);
+        // Android 5.0 使用转场动画
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            ActivityOptions options = ActivityOptions
+                    .makeSceneTransitionAnimation(getActivity(),
+                            itemView.findViewById(R.id.iv_img), "photos");
+            startActivity(NewsDetailActivity.class, "params", bundle, options.toBundle());
+        } else {
+            //让新的Activity从一个小的范围扩大到全屏
+            ActivityOptionsCompat options = ActivityOptionsCompat
+                    .makeScaleUpAnimation(itemView, itemView.getWidth() / 2,
+                            itemView.getHeight() / 2, 0, 0);
+            startActivity(NewsDetailActivity.class, "params", bundle, options.toBundle());
+        }
     }
 
     @Override
