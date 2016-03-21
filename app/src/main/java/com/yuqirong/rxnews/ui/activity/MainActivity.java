@@ -159,4 +159,5 @@ public class MainActivity extends BaseActivity
         super.onDestroy();
         adapter.clear();
     }
+
 }

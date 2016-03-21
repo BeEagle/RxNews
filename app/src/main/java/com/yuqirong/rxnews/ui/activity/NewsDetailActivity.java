@@ -17,7 +17,11 @@ import com.yuqirong.rxnews.R;
 import com.yuqirong.rxnews.event.NewsEvent;
 import com.yuqirong.rxnews.ui.fragment.NewsDetailFragment;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import butterknife.Bind;
+import cn.jpush.android.api.JPushInterface;
 
 /**
  * Created by yuqirong on 2016/3/9.
@@ -44,11 +48,30 @@ public class NewsDetailActivity extends BaseActivity {
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        Bundle bundle = getIntent().getBundleExtra("params");
-        String postId = bundle.getString("postId");
-        String id = bundle.getString("id");
-        String imgsrc = bundle.getString("imgsrc");
-        String title = bundle.getString("title");
+        Bundle bundle = getIntent().getExtras();
+        String postid = null;
+        String id = null;
+        String imgsrc = null;
+        String title = null;
+
+        // 判断extras是否为null，不为null则是推送的新闻
+        String extras = bundle.getString(JPushInterface.EXTRA_EXTRA);
+        if (extras != null) {
+            try {
+                JSONObject jsonObject = new JSONObject(extras);
+                postid = jsonObject.getString("postid");
+                id = jsonObject.getString("id");
+                imgsrc = jsonObject.getString("imgsrc");
+                title = jsonObject.getString("title");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            postid = bundle.getString("postid");
+            id = bundle.getString("id");
+            imgsrc = bundle.getString("imgsrc");
+            title = bundle.getString("title");
+        }
 
         setSupportActionBar(mToolbar);
         ActionBar supportActionBar = getSupportActionBar();
@@ -63,6 +86,12 @@ public class NewsDetailActivity extends BaseActivity {
                 .placeholder(R.drawable.thumbnail_default).crossFade().into(iv_album);
 
         mNewsDetailFragment = new NewsDetailFragment();
+
+        // 如果是推送的新闻
+        if (extras != null) {
+            bundle.putString("postid",postid);
+            bundle.putString("id",id);
+        }
         mNewsDetailFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.mFrameLayout, mNewsDetailFragment, "NewsDetailFragment").commit();

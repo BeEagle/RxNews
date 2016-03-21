@@ -49,7 +49,7 @@ public class NewsDetailFragment extends BaseFragment implements INewsDetailView 
     @Override
     protected void initData(Bundle savedInstanceState) {
         Bundle bundle = getArguments();
-        String postId = bundle.getString("postId");
+        String postId = bundle.getString("postid");
         id = bundle.getString("id");
         mNewsDetailPresenter.showNewsDetail(getTaskId(), id, postId);
     }

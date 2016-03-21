@@ -154,13 +154,13 @@ public class NewsFragment extends BaseFragment implements INewsView, NewsAdapter
             ActivityOptions options = ActivityOptions
                     .makeSceneTransitionAnimation(getActivity(),
                             itemView.findViewById(R.id.iv_img), "photos");
-            startActivity(NewsDetailActivity.class, "params", bundle, options.toBundle());
+            startActivity(NewsDetailActivity.class, bundle, options.toBundle());
         } else {
             //让新的Activity从一个小的范围扩大到全屏
             ActivityOptionsCompat options = ActivityOptionsCompat
                     .makeScaleUpAnimation(itemView, itemView.getWidth() / 2,
                             itemView.getHeight() / 2, 0, 0);
-            startActivity(NewsDetailActivity.class, "params", bundle, options.toBundle());
+            startActivity(NewsDetailActivity.class, bundle, options.toBundle());
         }
     }
 

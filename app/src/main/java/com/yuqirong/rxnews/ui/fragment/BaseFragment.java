@@ -111,25 +111,23 @@ public abstract class BaseFragment extends Fragment {
     /**
      * 跳转Activity
      * @param clazz
-     * @param bundleName
      * @param bundle
      */
-    public void startActivity(Class clazz, String bundleName, Bundle bundle) {
+    public void startActivity(Class clazz, Bundle bundle) {
         Intent intent = new Intent(mContext, clazz);
-        intent.putExtra(bundleName, bundle);
+        intent.putExtras(bundle);
         startActivity(intent);
     }
 
     /**
      * 跳转Activity
      * @param clazz
-     * @param bundleName
      * @param bundle
      * @param options
      */
-    public void startActivity(Class clazz, String bundleName, Bundle bundle,Bundle options) {
+    public void startActivity(Class clazz , Bundle bundle,Bundle options) {
         Intent intent = new Intent(mContext, clazz);
-        intent.putExtra(bundleName, bundle);
+        intent.putExtras(bundle);
         startActivity(intent,options);
     }
 
