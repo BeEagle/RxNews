@@ -9,8 +9,8 @@ import com.yuqirong.rxnews.app.AppService;
 import com.yuqirong.rxnews.app.Constant;
 import com.yuqirong.rxnews.event.NewsDetailEvent;
 import com.yuqirong.rxnews.event.NewsEvent;
-import com.yuqirong.rxnews.module.model.bean.News;
-import com.yuqirong.rxnews.module.model.bean.NewsDetail;
+import com.yuqirong.rxnews.module.news.model.bean.News;
+import com.yuqirong.rxnews.module.news.model.bean.NewsDetail;
 
 import java.util.List;
 import java.util.Map;

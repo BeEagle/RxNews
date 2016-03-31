@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.yuqirong.rxnews.R;
-import com.yuqirong.rxnews.module.model.bean.News;
+import com.yuqirong.rxnews.module.news.model.bean.News;
 
 /**
  * Created by Administrator on 2016/2/25.

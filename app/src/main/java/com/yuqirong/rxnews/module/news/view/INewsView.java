@@ -1,4 +1,4 @@
-package com.yuqirong.rxnews.module.view;
+package com.yuqirong.rxnews.module.news.view;
 
 import com.yuqirong.rxnews.event.NewsEvent;
 

@@ -9,9 +9,9 @@ import android.widget.TextView;
 import com.yuqirong.rxnews.R;
 import com.yuqirong.rxnews.app.Constant;
 import com.yuqirong.rxnews.event.NewsDetailEvent;
-import com.yuqirong.rxnews.module.model.bean.NewsDetail;
-import com.yuqirong.rxnews.module.presenter.NewsDetailPresenter;
-import com.yuqirong.rxnews.module.view.INewsDetailView;
+import com.yuqirong.rxnews.module.news.model.bean.NewsDetail;
+import com.yuqirong.rxnews.module.news.presenter.NewsDetailPresenter;
+import com.yuqirong.rxnews.module.news.view.INewsDetailView;
 
 import butterknife.Bind;
 import me.zhanghai.android.materialprogressbar.MaterialProgressBar;

@@ -1,7 +1,7 @@
-package com.yuqirong.rxnews.module.model.impl;
+package com.yuqirong.rxnews.module.news.model.impl;
 
 import com.yuqirong.rxnews.app.AppService;
-import com.yuqirong.rxnews.module.model.NewsInteractor;
+import com.yuqirong.rxnews.module.news.model.NewsInteractor;
 
 /**
  * Created by Anyway on 2016/3/9.

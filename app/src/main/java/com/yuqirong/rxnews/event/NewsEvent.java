@@ -1,7 +1,7 @@
 package com.yuqirong.rxnews.event;
 
 import com.yuqirong.rxnews.app.Constant;
-import com.yuqirong.rxnews.module.model.bean.News;
+import com.yuqirong.rxnews.module.news.model.bean.News;
 
 import java.util.List;
 

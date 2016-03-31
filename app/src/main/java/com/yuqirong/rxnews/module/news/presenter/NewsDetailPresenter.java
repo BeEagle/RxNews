@@ -1,9 +1,9 @@
-package com.yuqirong.rxnews.module.presenter;
+package com.yuqirong.rxnews.module.news.presenter;
 
 import com.yuqirong.rxnews.event.NewsDetailEvent;
-import com.yuqirong.rxnews.module.model.NewsDetailInteractor;
-import com.yuqirong.rxnews.module.model.impl.NewsDetailInteractorImpl;
-import com.yuqirong.rxnews.module.view.INewsDetailView;
+import com.yuqirong.rxnews.module.news.model.NewsDetailInteractor;
+import com.yuqirong.rxnews.module.news.model.impl.NewsDetailInteractorImpl;
+import com.yuqirong.rxnews.module.news.view.INewsDetailView;
 
 /**
  * Created by Anyway on 2016/3/9.

@@ -1,7 +1,7 @@
 package com.yuqirong.rxnews.network;
 
-import com.yuqirong.rxnews.module.model.bean.News;
-import com.yuqirong.rxnews.module.model.bean.NewsDetail;
+import com.yuqirong.rxnews.module.news.model.bean.News;
+import com.yuqirong.rxnews.module.news.model.bean.NewsDetail;
 
 import java.util.List;
 import java.util.Map;

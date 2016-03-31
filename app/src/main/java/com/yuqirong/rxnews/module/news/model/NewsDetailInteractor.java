@@ -1,4 +1,4 @@
-package com.yuqirong.rxnews.module.model;
+package com.yuqirong.rxnews.module.news.model;
 
 /**
  * Created by Anyway on 2016/3/9.

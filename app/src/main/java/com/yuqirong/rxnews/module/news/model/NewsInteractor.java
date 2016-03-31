@@ -1,4 +1,4 @@
-package com.yuqirong.rxnews.module.model;
+package com.yuqirong.rxnews.module.news.model;
 
 /**
  * 新闻列表
