@@ -59,4 +59,8 @@ public class RxCollection {
         getCompositeSub(taskId).add(RxNews.getNewsDetail(id, postId));
     }
 
+    public void getVideo(int taskId,String id,int startPage){
+        getCompositeSub(taskId).add(RxNews.getVideo(id,startPage));
+    }
+
 }

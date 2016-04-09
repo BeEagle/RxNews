@@ -11,10 +11,16 @@ public class FragmentFactory {
 
     }
 
-    public static Fragment create(String type, String id) {
+    public static Fragment createNewsFragment(String type, String id) {
         NewsFragment newsFragment = new NewsFragment();
         newsFragment.setParams(type, id);
         return newsFragment;
+    }
+
+    public static Fragment createVideoFragment(String id) {
+        VideoFragment videoFragment = new VideoFragment();
+        videoFragment.setParams(id);
+        return videoFragment;
     }
 
 }

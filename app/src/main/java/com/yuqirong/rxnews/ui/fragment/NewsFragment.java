@@ -138,7 +138,7 @@ public class NewsFragment extends BaseFragment implements INewsView, NewsAdapter
 
     @Override
     public void showError() {
-        Snackbar.make(getRootView(), "好像有哪里不对", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(getRootView(), R.string.str_error, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
@@ -146,7 +146,7 @@ public class NewsFragment extends BaseFragment implements INewsView, NewsAdapter
         Bundle bundle = new Bundle();
         bundle.putString("id", id); // id
         bundle.putString("title", mNewsAdapter.getList().get(position).title); // 标题
-        bundle.putString("postId", mNewsAdapter.getList().get(position).postid); // 专辑id
+        bundle.putString("postid", mNewsAdapter.getList().get(position).postid); // 专辑id
         bundle.putString("imgsrc", mNewsAdapter.getList().get(position).imgsrc); // 图片url
 
         // Android 5.0 使用转场动画

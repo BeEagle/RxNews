@@ -2,6 +2,7 @@ package com.yuqirong.rxnews.network;
 
 import com.yuqirong.rxnews.module.news.model.bean.News;
 import com.yuqirong.rxnews.module.news.model.bean.NewsDetail;
+import com.yuqirong.rxnews.module.video.model.bean.Video;
 
 import java.util.List;
 import java.util.Map;
@@ -11,7 +12,7 @@ import retrofit2.http.Path;
 import rx.Observable;
 
 /**
- * Created by Administrator on 2016/2/24.
+ * Created by yuqirong on 2016/2/24.
  */
 public interface RxNewsAPI {
 
@@ -34,5 +35,15 @@ public interface RxNewsAPI {
      */
     @GET("nc/article/{postId}/full.html")
     Observable<Map<String, NewsDetail>> getNewsDetail(@Path("postId") String postId);
+
+    /**
+     * 得到视频列表
+     *
+     * @param id        视频ID
+     * @param startPage 得到新闻列表
+     * @return
+     */
+    @GET("nc/video/list/{id}/n/{startPage}-10.html")
+    Observable<Map<String, List<Video>>> getVideo(@Path("id") String id, @Path("startPage") int startPage);
 
 }

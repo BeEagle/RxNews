@@ -1,6 +1,7 @@
 package com.yuqirong.rxnews.ui.view;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,7 +25,11 @@ public class AutoLoadRecyclerView extends RecyclerView {
     }
 
     public AutoLoadRecyclerView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs,0);
+    }
+
+    public AutoLoadRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
         initView();
     }
 

@@ -77,6 +77,18 @@ public class Constant {
     // 军事
     public static final String MILITARY_ID = "T1348648141035";
 
+    /**
+     * 视频 http://c.3g.163.com/nc/video/list/V9LG4B3A0/n/10-10.html
+     */
+    // 热点视频
+    public static final String VIDEO_HOT_ID = "V9LG4B3A0";
+    // 娱乐视频
+    public static final String VIDEO_ENTERTAINMENT_ID = "V9LG4CHOR";
+    // 搞笑视频
+    public static final String VIDEO_FUN_ID = "V9LG4E6VR";
+    // 精品视频
+    public static final String VIDEO_CHOICE_ID = "00850FRB";
+
     public enum Result {
         SUCCESS, FAIL
     }
@@ -86,5 +98,7 @@ public class Constant {
     }
 
     public static final String[] TITLE_ARRAYS = new String[]{"财经", "足球", "娱乐"};
+
+    public static final String[] VIDEO_TITLE_ARRAYS = new String[]{"热点","娱乐","搞笑","精品"};
 
 }

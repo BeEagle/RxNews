@@ -1,5 +1,7 @@
 package com.yuqirong.rxnews.ui.activity;
 
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -52,6 +54,43 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     protected void onPause() {
         super.onPause();
         JPushInterface.onPause(this);
+    }
+
+    /**
+     * 跳转Activity
+     * @param clazz
+     * @param bundle
+     */
+    public void startActivity(Class clazz, Bundle bundle) {
+        Intent intent = new Intent(this, clazz);
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+    /**
+     * 跳转Activity
+     * @param clazz
+     * @param bundle
+     * @param options
+     */
+    public void startActivity(Class clazz , Bundle bundle,Bundle options) {
+        Intent intent = new Intent(this, clazz);
+        intent.putExtras(bundle);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            startActivity(intent, options);
+        }else{
+            startActivity(intent);
+        }
+    }
+
+
+    /**
+     * 跳转Activity
+     * @param clazz
+     */
+    public void startActivity(Class clazz) {
+        Intent intent = new Intent(this, clazz);
+        startActivity(intent);
     }
 
 }

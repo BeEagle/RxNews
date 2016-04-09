@@ -9,8 +9,10 @@ import com.yuqirong.rxnews.app.AppService;
 import com.yuqirong.rxnews.app.Constant;
 import com.yuqirong.rxnews.event.NewsDetailEvent;
 import com.yuqirong.rxnews.event.NewsEvent;
+import com.yuqirong.rxnews.event.VideoEvent;
 import com.yuqirong.rxnews.module.news.model.bean.News;
 import com.yuqirong.rxnews.module.news.model.bean.NewsDetail;
+import com.yuqirong.rxnews.module.video.model.bean.Video;
 
 import java.util.List;
 import java.util.Map;
@@ -219,6 +221,50 @@ public class RxNews {
         List<News> news = AppService.getInstance().getGson().fromJson(entity.getJson(), new TypeToken<List<News>>() {
         }.getType());
         return news;
+    }
+
+    public static Subscription getVideo(final String id, final int startPage) {
+        Subscription subscription = AppService.getInstance().getRxNewsAPI().getVideo(id, startPage)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMap(new Func1<Map<String, List<Video>>, Observable<Video>>() {
+                    @Override
+                    public Observable<Video> call(Map<String, List<Video>> stringListMap) {
+                        return Observable.from(stringListMap.get(id));
+                    }
+                }).toSortedList(new Func2<Video, Video, Integer>() {
+                    @Override
+                    public Integer call(Video video, Video video2) {
+                        return -video.ptime.compareTo(video2.ptime);
+                    }
+                }).subscribe(new Subscriber<List<Video>>() {
+                    @Override
+                    public void onCompleted() {
+                        Log.i(TAG, "getVideo onCompleted");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.i(TAG, "error : " + e.getMessage());
+                        VideoEvent event = new VideoEvent(id, null, startPage == 0 ? Constant.Tag.REFRESH : Constant.Tag.LOAD_MORE);
+                        AppService.getInstance().getEventBus().post(event);
+                    }
+
+                    @Override
+                    public void onNext(List<Video> videos) {
+                        VideoEvent event;
+                        if (videos == null) {
+                            event = new VideoEvent(id, null, startPage == 0 ? Constant.Tag.REFRESH : Constant.Tag.LOAD_MORE);
+                            event.setResult(Constant.Result.FAIL);
+                        } else {
+                            event = new VideoEvent(id, videos, startPage == 0 ? Constant.Tag.REFRESH : Constant.Tag.LOAD_MORE);
+                            event.setResult(Constant.Result.SUCCESS);
+                        }
+                        AppService.getInstance().getEventBus().post(event);
+                    }
+                });
+
+        return subscription;
     }
 
 }

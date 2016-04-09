@@ -14,12 +14,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 
 import com.yuqirong.rxnews.R;
 import com.yuqirong.rxnews.app.Constant;
-import com.yuqirong.rxnews.event.NewsEvent;
+import com.yuqirong.rxnews.event.VideoEvent;
 import com.yuqirong.rxnews.ui.adapter.FragmentAdapter;
 import com.yuqirong.rxnews.ui.fragment.FragmentFactory;
+import com.yuqirong.rxnews.ui.view.VerticalDrawerLayout;
 
 import butterknife.Bind;
 
@@ -38,6 +40,10 @@ public class MainActivity extends BaseActivity
     TabLayout mTabLayout;
     @Bind(R.id.mViewPager)
     ViewPager mViewPager;
+    @Bind(R.id.mVerticalDrawerLayout)
+    VerticalDrawerLayout mVerticalDrawerLayout;
+    @Bind(R.id.ib_arrow)
+    ImageButton ib_arrow;
 
     private FragmentManager fm;
     private FragmentAdapter adapter;
@@ -58,14 +64,22 @@ public class MainActivity extends BaseActivity
         mNavigationView.setNavigationItemSelectedListener(this);
         fm = getSupportFragmentManager();
         adapter = new FragmentAdapter(fm);
-        adapter.addFragment(FragmentFactory.create(Constant.OTHER_TYPE, Constant.FINANCE_ID), Constant.TITLE_ARRAYS[0]);
-        adapter.addFragment(FragmentFactory.create(Constant.OTHER_TYPE, Constant.FOOTBALL_ID), Constant.TITLE_ARRAYS[1]);
-        adapter.addFragment(FragmentFactory.create(Constant.OTHER_TYPE, Constant.ENTERTAINMENT_ID), Constant.TITLE_ARRAYS[2]);
+        adapter.addFragment(FragmentFactory.createNewsFragment(Constant.OTHER_TYPE, Constant.FINANCE_ID), Constant.TITLE_ARRAYS[0]);
+        adapter.addFragment(FragmentFactory.createNewsFragment(Constant.OTHER_TYPE, Constant.FOOTBALL_ID), Constant.TITLE_ARRAYS[1]);
+        adapter.addFragment(FragmentFactory.createNewsFragment(Constant.OTHER_TYPE, Constant.ENTERTAINMENT_ID), Constant.TITLE_ARRAYS[2]);
         mViewPager.setAdapter(adapter);
         mViewPager.addOnPageChangeListener(this);
         mTabLayout.setupWithViewPager(mViewPager);
-
+        ib_arrow.setOnClickListener(this);
+        mVerticalDrawerLayout.setDrawerListener(mSimpleDrawerListener);
     }
+
+    private VerticalDrawerLayout.SimpleDrawerListener mSimpleDrawerListener = new VerticalDrawerLayout.SimpleDrawerListener() {
+        @Override
+        public void onDrawerSlide(View drawerView, float slideOffset) {
+            ib_arrow.setRotation(slideOffset * 180);
+        }
+    };
 
     @Override
     public void onBackPressed() {
@@ -106,7 +120,7 @@ public class MainActivity extends BaseActivity
         int id = item.getItemId();
         if (id == R.id.nav_camera) {
             // Handle the camera action
-
+            startActivity(VideoActivity.class);
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
@@ -125,7 +139,7 @@ public class MainActivity extends BaseActivity
         return true;
     }
 
-    public void onEventMainThread(NewsEvent newsEvent) {
+    public void onEventMainThread(VideoEvent videoEvent) {
 
     }
 
@@ -135,6 +149,15 @@ public class MainActivity extends BaseActivity
             case R.id.fab:
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                break;
+            case R.id.ib_arrow:
+                if (mVerticalDrawerLayout.isDrawerOpen()) {
+                    mVerticalDrawerLayout.closeDrawer();
+                    mFAButton.show();
+                } else {
+                    mVerticalDrawerLayout.openDrawerView();
+                    mFAButton.hide();
+                }
                 break;
         }
     }
