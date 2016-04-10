@@ -23,6 +23,10 @@ public class NewsAdapter extends LoadMoreAdapter<News> {
     // 动画执行到的position
     private int animPosition = -1;
 
+    public NewsAdapter(RecyclerView.LayoutManager layoutManager) {
+        super(layoutManager);
+    }
+
     public void resetAnimPosition() {
         animPosition = -1;
     }

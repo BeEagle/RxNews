@@ -19,8 +19,12 @@ public class VideoPresenter {
     }
 
     public void getVideo(int taskId, String id, int startPage) {
-        showLoading();
         mVideoInteractor.getVideo(taskId, id, startPage);
+    }
+
+    public void initVideo(int taskId, String id) {
+        showLoading();
+        mVideoInteractor.initVideo(taskId, id);
     }
 
     public void showSuccess(VideoEvent videoEvent) {

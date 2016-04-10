@@ -2,39 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/white">
-
-    <LinearLayout
-        android:id="@+id/ll_load_more"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <me.zhanghai.android.materialprogressbar.MaterialProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:indeterminate="true"
-            style="@style/Widget.MaterialProgressBar.ProgressBar" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="10dp"
-            android:textColor="#88000000"
-            android:text="@string/load_more" />
-    </LinearLayout>
+    android:background="@android:color/transparent">
 
     <TextView
-        android:id="@+id/tv_load_fail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:padding="15dp"
         android:gravity="center"
-        android:textColor="#88000000"
-        android:text="@string/load_fail"
-        android:visibility="gone" />
+        android:text="@string/load_more"
+        android:textColor="#88000000" />
 
 </RelativeLayout>

@@ -26,6 +26,9 @@ public class Video {
      * m3u8_url : http://flv2.bn.netease.com/videolib3/1602/12/BFihm9923/SD/movie_index.m3u8
      * ptime : 2016-02-12 12:05:39
      */
+    public int ivWidth;
+    public int ivHeight;
+    public boolean isMeasure;
 
     @JsonProperty("replyCount")
     public int replyCount;

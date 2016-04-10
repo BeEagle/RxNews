@@ -10,7 +10,7 @@ import com.yuqirong.rxnews.rxmethod.RxCollection;
 import de.greenrobot.event.EventBus;
 
 /**
- * Created by Administrator on 2016/2/24.
+ * Created by yuqirong on 2016/2/24.
  */
 public class AppService {
 
@@ -58,12 +58,15 @@ public class AppService {
     }
 
     public static AppService getInstance() {
-        synchronized (WATCH_DOG) {
-            if (mAppService == null) {
-                mAppService = new AppService();
+        if (mAppService == null) {
+            synchronized (WATCH_DOG) {
+                if (mAppService == null) {
+                    mAppService = new AppService();
+                }
+
             }
-            return mAppService;
         }
+        return mAppService;
     }
 
 }

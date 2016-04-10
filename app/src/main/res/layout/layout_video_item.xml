@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:elevation="10dp"
-
+    app:cardElevation="10dp"
     app:cardCornerRadius="8dp">
 
     <LinearLayout
@@ -15,15 +14,15 @@
 
         <ImageView
             android:id="@+id/iv_album"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             tools:src="@drawable/thumbnail_default"
             android:scaleType="centerCrop" />
 
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:padding="5dp"
             android:maxLines="2"
             tools:text="AAAAA"/>

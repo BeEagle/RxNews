@@ -27,7 +27,7 @@ import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
 /**
- * Created by Administrator on 2016/2/24.
+ * Created by yuqirong on 2016/2/24.
  */
 public class RxNews {
 
@@ -107,9 +107,9 @@ public class RxNews {
 
                     @Override
                     public void call(List<News> news) {
-                        // TODO cache news
+                        // cache news
                         String json = AppService.getInstance().getGson().toJson(news);
-                        cacheNews(json, id);
+                        cacheJSON(json, id);
                     }
                 })
                 .subscribe(new Subscriber<List<News>>() {
@@ -197,7 +197,7 @@ public class RxNews {
      * @param id
      */
     // 缓存数据
-    private static void cacheNews(String json, String id) {
+    private static void cacheJSON(String json, String id) {
         ResultEntityDao dao = AppService.getInstance().getResultEntityDao();
         // 删除旧数据
         dao.queryBuilder().where(ResultEntityDao.Properties.NId.eq(id)).buildDelete()
@@ -223,6 +223,47 @@ public class RxNews {
         return news;
     }
 
+
+    public static Subscription initVideos(final String id) {
+        Subscription subscription = Observable.create(new Observable.OnSubscribe<List<Video>>() {
+
+            @Override
+            public void call(Subscriber<? super List<Video>> subscriber) {
+                List<Video> cacheVideos = getCacheVideos(id);
+                subscriber.onNext(cacheVideos);
+                subscriber.onCompleted();
+            }
+        }).subscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<List<Video>>() {
+                    @Override
+                    public void onCompleted() {
+                        Log.i(TAG, "onCompleted");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.i(TAG, "error : " + e.getMessage());
+                        VideoEvent event = new VideoEvent(id, null, Constant.Tag.INIT);
+                        event.setResult(Constant.Result.FAIL);
+                        AppService.getInstance().getEventBus().post(event);
+                    }
+
+                    @Override
+                    public void onNext(List<Video> videos) {
+                        VideoEvent event;
+                        if (videos == null) {
+                            event = new VideoEvent(id, null, Constant.Tag.INIT);
+                            event.setResult(Constant.Result.FAIL);
+                        } else {
+                            event = new VideoEvent(id, videos, Constant.Tag.INIT);
+                            event.setResult(Constant.Result.SUCCESS);
+                        }
+                        AppService.getInstance().getEventBus().post(event);
+                    }
+                });
+        return subscription;
+    }
+
     public static Subscription getVideo(final String id, final int startPage) {
         Subscription subscription = AppService.getInstance().getRxNewsAPI().getVideo(id, startPage)
                 .subscribeOn(Schedulers.io())
@@ -236,6 +277,13 @@ public class RxNews {
                     @Override
                     public Integer call(Video video, Video video2) {
                         return -video.ptime.compareTo(video2.ptime);
+                    }
+                }).doOnNext(new Action1<List<Video>>() {
+                    @Override
+                    public void call(List<Video> videos) {
+                        // cache video
+                        String json = AppService.getInstance().getGson().toJson(videos);
+                        cacheJSON(json, id);
                     }
                 }).subscribe(new Subscriber<List<Video>>() {
                     @Override
@@ -265,6 +313,20 @@ public class RxNews {
                 });
 
         return subscription;
+    }
+
+    /**
+     * 从缓存中读取数据
+     *
+     * @param id
+     * @return
+     */
+    private static List<Video> getCacheVideos(String id) {
+        ResultEntityDao resultEntityDao = AppService.getInstance().getResultEntityDao();
+        ResultEntity entity = resultEntityDao.queryBuilder().where(ResultEntityDao.Properties.NId.eq(id)).unique();
+        List<Video> videos = AppService.getInstance().getGson().fromJson(entity.getJson(), new TypeToken<List<News>>() {
+        }.getType());
+        return videos;
     }
 
 }

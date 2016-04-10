@@ -14,7 +14,7 @@ public class DBHelper {
     private ResultEntityDao mResultEntityDao;
 
     private DBHelper(Context context) {
-        DaoMaster.DevOpenHelper devOpenHelper = new DaoMaster.DevOpenHelper(context,"rxnews",null);
+        DaoMaster.DevOpenHelper devOpenHelper = new DaoMaster.DevOpenHelper(context,"rxnews.db",null);
         SQLiteDatabase writableDB = devOpenHelper.getWritableDatabase();
         mDaoMaster = new DaoMaster(writableDB);
         mDaoSession = mDaoMaster.newSession();

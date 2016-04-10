@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.yuqirong.rxnews.R;
 import com.yuqirong.rxnews.module.video.model.bean.Video;
+import com.yuqirong.rxnews.util.DisplayUtils;
 
 /**
  * Created by Administrator on 2016/2/25.
@@ -22,6 +23,10 @@ public class VideoAdapter extends LoadMoreAdapter<Video> {
     private OnItemClickListener listener;
     // 动画执行到的position
     private int animPosition = -1;
+
+    public VideoAdapter(RecyclerView.LayoutManager layoutManager) {
+        super(layoutManager);
+    }
 
     public void resetAnimPosition() {
         animPosition = -1;
@@ -39,8 +44,21 @@ public class VideoAdapter extends LoadMoreAdapter<Video> {
         ViewHolder mViewHolder = (ViewHolder) holder;
         Video video = getList().get(position);
         mViewHolder.tv_title.setText(video.title);
+
+        ViewGroup.LayoutParams layoutParams = mViewHolder.iv_album.getLayoutParams();
+
+        if (!video.isMeasure) {
+            video.ivWidth = (DisplayUtils.getScreenWidth(mViewHolder.mContext) - 2 * DisplayUtils.dip2px(mViewHolder.mContext, 4)) / 2;
+            video.ivHeight = (int) (video.ivWidth * (Math.random() / 2 + 0.7));
+            video.isMeasure = true;
+        }
+        layoutParams.width = video.ivWidth;
+        layoutParams.height = video.ivHeight;
+        mViewHolder.iv_album.setLayoutParams(layoutParams);
+
         Glide.with(mViewHolder.mContext).load(video.cover).centerCrop()
                 .placeholder(R.drawable.thumbnail_default).crossFade().into(mViewHolder.iv_album);
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

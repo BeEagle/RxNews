@@ -13,4 +13,9 @@ public class VideoInteractorImpl implements VideoInteractor {
         AppService.getInstance().getRxCollection().getVideo(taskId, id, startPage);
     }
 
+    @Override
+    public void initVideo(int taskId, String id) {
+        AppService.getInstance().getRxCollection().initVideo(taskId,id);
+    }
+
 }

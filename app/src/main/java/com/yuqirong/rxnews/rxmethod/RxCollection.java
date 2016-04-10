@@ -5,7 +5,7 @@ import android.util.SparseArray;
 import rx.subscriptions.CompositeSubscription;
 
 /**
- * Created by Administrator on 2016/2/25.
+ * Created by yuqirong on 2016/2/25.
  */
 public class RxCollection {
 
@@ -57,6 +57,10 @@ public class RxCollection {
 
     public void getNewsDetail(int taskId, String id, String postId) {
         getCompositeSub(taskId).add(RxNews.getNewsDetail(id, postId));
+    }
+
+    public void initVideo(int taskId,String id){
+        getCompositeSub(taskId).add(RxNews.initVideos(id));
     }
 
     public void getVideo(int taskId,String id,int startPage){

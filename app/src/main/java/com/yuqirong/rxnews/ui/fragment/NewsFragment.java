@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 
 import com.yuqirong.rxnews.R;
@@ -14,9 +16,9 @@ import com.yuqirong.rxnews.event.NewsEvent;
 import com.yuqirong.rxnews.module.news.presenter.NewsPresenter;
 import com.yuqirong.rxnews.module.news.view.INewsView;
 import com.yuqirong.rxnews.ui.activity.NewsDetailActivity;
-import com.yuqirong.rxnews.ui.adapter.LoadMoreAdapter;
 import com.yuqirong.rxnews.ui.adapter.NewsAdapter;
 import com.yuqirong.rxnews.ui.view.AutoLoadRecyclerView;
+import com.yuqirong.rxnews.ui.view.DividerItemDecoration;
 import com.yuqirong.rxnews.util.NetworkUtils;
 
 import butterknife.Bind;
@@ -25,7 +27,7 @@ import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 /**
  * Created by yuqirong on 2016/2/24.
  */
-public class NewsFragment extends BaseFragment implements INewsView, NewsAdapter.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener, LoadMoreAdapter.OnLoadingMoreListener {
+public class NewsFragment extends BaseFragment implements INewsView, NewsAdapter.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener, AutoLoadRecyclerView.OnLoadingMoreListener {
 
     @Bind(R.id.mRecyclerView)
     AutoLoadRecyclerView mRecyclerView;
@@ -51,7 +53,12 @@ public class NewsFragment extends BaseFragment implements INewsView, NewsAdapter
 
     @Override
     protected void initView() {
-        mNewsAdapter = new NewsAdapter();
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        final LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView.setLayoutManager(mLinearLayoutManager);
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST));
+        mNewsAdapter = new NewsAdapter(mLinearLayoutManager);
         mRecyclerView.setOnLoadingMoreListener(this);
         mRecyclerView.setAdapter(mNewsAdapter);
         mNewsAdapter.setOnItemClickListener(this);
@@ -130,7 +137,7 @@ public class NewsFragment extends BaseFragment implements INewsView, NewsAdapter
             case LOAD_MORE:
                 mNewsAdapter.getList().addAll(newsEvent.getNews());
                 mNewsAdapter.notifyDataSetChanged();
-                mNewsAdapter.completeLoadMore(true);
+                mRecyclerView.notifyLoadingFinish();
                 break;
         }
         mRecyclerView.setVisibility(View.VISIBLE);

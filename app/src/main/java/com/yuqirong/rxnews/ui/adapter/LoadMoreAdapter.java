@@ -1,11 +1,11 @@
 package com.yuqirong.rxnews.ui.adapter;
 
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.LayoutInflater;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.yuqirong.rxnews.R;
 import com.yuqirong.rxnews.app.MyApplication;
@@ -18,8 +18,12 @@ import java.util.List;
  */
 public abstract class LoadMoreAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    // 尾view的类型
     private static final int TYPE_FOOTER = 1001;
+    // 头view的类型
     private static final int TYPE_HEADER = 1002;
+
+    private final RecyclerView.LayoutManager layoutManager;
     // 头ViewHolder
     protected FooterViewHolder mFooterViewHolder;
     // 尾ViewHolder
@@ -38,25 +42,26 @@ public abstract class LoadMoreAdapter<T> extends RecyclerView.Adapter<RecyclerVi
     }
 
     protected List<T> list = new ArrayList<>();
-    protected boolean loadSuccess = true;
 
-    // 是否为加载更多
-    private boolean isLoadingMore;
-
-    public void setIsLoadingMore(boolean isLoadingMore) {
-        this.isLoadingMore = isLoadingMore;
-    }
-
-    public boolean isLoadingMore() {
-        return isLoadingMore;
-    }
-
-    public void addHeaderView(View view) {
+    /**
+     * 设置头view
+     * @param view
+     */
+    public void setHeaderView(View view) {
         this.mHeaderView = view;
     }
 
-    public LoadMoreAdapter(){
-        mFooterView = LayoutInflater.from(MyApplication.getContext()).inflate(R.layout.layout_footer,null);
+    /**
+     * 设置尾view
+     * @param view
+     */
+    public void setFooterView(View view) {
+        this.mFooterView = view;
+    }
+
+    public LoadMoreAdapter(RecyclerView.LayoutManager layoutManager) {
+        this.layoutManager = layoutManager;
+        mFooterView = LayoutInflater.from(MyApplication.getContext()).inflate(R.layout.layout_footer, null);
     }
 
     @Override
@@ -82,19 +87,23 @@ public abstract class LoadMoreAdapter<T> extends RecyclerView.Adapter<RecyclerVi
             return;
         } else if (mFooterView != null && holder.getItemViewType() == TYPE_FOOTER) {
             final FooterViewHolder viewHolder = (FooterViewHolder) holder;
-            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (!loadSuccess) {
-                        loadSuccess = !loadSuccess;
-                        viewHolder.ll_load_more.setVisibility(View.VISIBLE);
-                        viewHolder.tv_load_fail.setVisibility(View.INVISIBLE);
-                        if (listener != null) {
-                            listener.onLoadingMore();
+            if (layoutManager != null) {
+                // 如果LayoutManager是StaggeredGridLayoutManager，则把footerViewHolder设置为fullspan
+                if (layoutManager instanceof StaggeredGridLayoutManager) {
+                    if (((StaggeredGridLayoutManager) layoutManager).getSpanCount() > 1) {
+                        StaggeredGridLayoutManager.LayoutParams layoutParams = (StaggeredGridLayoutManager.LayoutParams) viewHolder.itemView.getLayoutParams();
+                        if(layoutParams!=null){
+                            layoutParams.setFullSpan(true);
                         }
                     }
                 }
-            });
+            } else if (layoutManager instanceof GridLayoutManager) {
+                if (((GridLayoutManager) layoutManager)
+                        .getSpanCount() != 1 && ((GridLayoutManager) layoutManager)
+                        .getSpanSizeLookup() instanceof GridLayoutManager.DefaultSpanSizeLookup) {
+                    throw new RuntimeException("网格布局列数大于1时应该继承SpanSizeLookup时处理底部加载时布局占满一行。");
+                }
+            }
         } else {
             if (mHeaderView != null) {
                 position--;
@@ -106,10 +115,11 @@ public abstract class LoadMoreAdapter<T> extends RecyclerView.Adapter<RecyclerVi
     @Override
     public int getItemCount() {
         int exViewNum = 0;
-        //如果有头View或尾View
+        //如果有头View
         if (mHeaderView != null) {
             exViewNum++;
         }
+        //如果有尾View
         if (mFooterView != null) {
             exViewNum++;
         }
@@ -119,7 +129,10 @@ public abstract class LoadMoreAdapter<T> extends RecyclerView.Adapter<RecyclerVi
     @Override
     public void onViewDetachedFromWindow(RecyclerView.ViewHolder holder) {
         super.onViewDetachedFromWindow(holder);
-        holder.itemView.clearAnimation();
+        if (holder.itemView.getAnimation() != null && holder.itemView
+                .getAnimation().hasStarted()) {
+            holder.itemView.clearAnimation();
+        }
     }
 
     @Override
@@ -133,44 +146,6 @@ public abstract class LoadMoreAdapter<T> extends RecyclerView.Adapter<RecyclerVi
                 return super.getItemViewType(position - 1);
             }
             return super.getItemViewType(position);
-        }
-    }
-
-    /**
-     * 是否成功加载更多，加载失败显示 “加载失败，点击重试”
-     */
-    public void completeLoadMore(boolean success) {
-        loadSuccess = success;
-        if (mFooterViewHolder == null) {
-            return;
-        }
-        if (!success) {
-            isLoadingMore = true;
-            mFooterViewHolder.ll_load_more.setVisibility(View.INVISIBLE);
-            mFooterViewHolder.tv_load_fail.setText(mFooterViewHolder.itemView.getContext().getResources().getString(R.string.load_fail));
-            mFooterViewHolder.tv_load_fail.setVisibility(View.VISIBLE);
-        } else {
-            isLoadingMore = false;
-        }
-    }
-
-    /**
-     * 设置列表到底的文字提示，例如 “没有更多微博了”
-     */
-    public void setEndText(String endText) {
-        completeLoadMore(false);
-        loadSuccess = true;
-        if (mFooterViewHolder != null)
-            mFooterViewHolder.tv_load_fail.setText(endText);
-    }
-
-    /**
-     * 初始化FooterView
-     */
-    public void initFooterViewHolder() {
-        if (mFooterViewHolder != null) {
-            mFooterViewHolder.tv_load_fail.setVisibility(View.INVISIBLE);
-            mFooterViewHolder.ll_load_more.setVisibility(View.VISIBLE);
         }
     }
 
@@ -206,14 +181,10 @@ public abstract class LoadMoreAdapter<T> extends RecyclerView.Adapter<RecyclerVi
     //footer viewholder
     public static class FooterViewHolder extends RecyclerView.ViewHolder {
 
-        public LinearLayout ll_load_more;
-        public TextView tv_load_fail;
-
         public FooterViewHolder(View itemView) {
             super(itemView);
-            ll_load_more = (LinearLayout) itemView.findViewById(R.id.ll_load_more);
-            tv_load_fail = (TextView) itemView.findViewById(R.id.tv_load_fail);
         }
+
     }
 
     //header viewhoder
@@ -223,31 +194,4 @@ public abstract class LoadMoreAdapter<T> extends RecyclerView.Adapter<RecyclerVi
         }
     }
 
-    // 加载更多监听器
-    private OnLoadingMoreListener listener;
-
-    /**
-     * 设置加载更多监听器
-     *
-     * @return
-     */
-    public void setOnLoadingMoreListener(OnLoadingMoreListener listener) {
-        this.listener = listener;
-    }
-
-    /**
-     * 得到加载更多监听器
-     *
-     * @return
-     */
-    public OnLoadingMoreListener getListener() {
-        return listener;
-    }
-
-    /**
-     * 刷新的监听器
-     */
-    public interface OnLoadingMoreListener {
-        void onLoadingMore();
-    }
 }

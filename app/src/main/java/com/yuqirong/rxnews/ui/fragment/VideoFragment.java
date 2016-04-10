@@ -3,6 +3,8 @@ package com.yuqirong.rxnews.ui.fragment;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 
 import com.yuqirong.rxnews.R;
@@ -11,9 +13,11 @@ import com.yuqirong.rxnews.app.Constant;
 import com.yuqirong.rxnews.event.VideoEvent;
 import com.yuqirong.rxnews.module.video.presenter.VideoPresenter;
 import com.yuqirong.rxnews.module.video.view.IVideoView;
-import com.yuqirong.rxnews.ui.adapter.LoadMoreAdapter;
 import com.yuqirong.rxnews.ui.adapter.VideoAdapter;
 import com.yuqirong.rxnews.ui.view.AutoLoadRecyclerView;
+import com.yuqirong.rxnews.ui.view.SpacesItemDecoration;
+import com.yuqirong.rxnews.util.DisplayUtils;
+import com.yuqirong.rxnews.util.NetworkUtils;
 
 import butterknife.Bind;
 import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
@@ -21,7 +25,7 @@ import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 /**
  * Created by Anyway on 2016/4/9.
  */
-public class VideoFragment extends BaseFragment implements IVideoView, VideoAdapter.OnItemClickListener, LoadMoreAdapter.OnLoadingMoreListener, SwipeRefreshLayout.OnRefreshListener {
+public class VideoFragment extends BaseFragment implements IVideoView, VideoAdapter.OnItemClickListener, AutoLoadRecyclerView.OnLoadingMoreListener, SwipeRefreshLayout.OnRefreshListener {
 
     @Bind(R.id.mRecyclerView)
     AutoLoadRecyclerView mRecyclerView;
@@ -48,13 +52,21 @@ public class VideoFragment extends BaseFragment implements IVideoView, VideoAdap
 
     @Override
     protected void initView() {
-        videoAdapter = new VideoAdapter();
         mRecyclerView.setOnLoadingMoreListener(this);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.addItemDecoration(new SpacesItemDecoration(DisplayUtils.dip2px(mContext, 4)));
+        videoAdapter = new VideoAdapter(layoutManager);
         mRecyclerView.setAdapter(videoAdapter);
         videoAdapter.setOnItemClickListener(this);
         mSwipeRefreshLayout.setColorSchemeResources(SWIPE_REFRESH_LAYOUT_COLOR);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mVideoPresenter = new VideoPresenter(this);
+        if (!NetworkUtils.isConnected(mContext)) {
+            mVideoPresenter.initVideo(getTaskId(), id);
+        }
     }
 
     @Override
@@ -90,6 +102,10 @@ public class VideoFragment extends BaseFragment implements IVideoView, VideoAdap
     public void showSuccess(VideoEvent videoEvent) {
         Constant.Tag tag = videoEvent.getTag();
         switch (tag) {
+            case INIT:
+                videoAdapter.getList().addAll(videoEvent.getVideos());
+                videoAdapter.notifyDataSetChanged();
+                break;
             case REFRESH:
                 videoAdapter.resetAnimPosition(); // 重置animPosition
                 videoAdapter.getList().clear();
@@ -98,9 +114,9 @@ public class VideoFragment extends BaseFragment implements IVideoView, VideoAdap
                 mSwipeRefreshLayout.setRefreshing(false);
                 break;
             case LOAD_MORE:
-//                mNewsAdapter.getList().addAll(newsEvent.getNews());
-//                mNewsAdapter.notifyDataSetChanged();
-//                mNewsAdapter.completeLoadMore(true);
+                videoAdapter.getList().addAll(videoEvent.getVideos());
+                videoAdapter.notifyDataSetChanged();
+                mRecyclerView.notifyLoadingFinish();
                 break;
         }
         mRecyclerView.setVisibility(View.VISIBLE);
@@ -130,11 +146,13 @@ public class VideoFragment extends BaseFragment implements IVideoView, VideoAdap
 
     @Override
     public void onLoadingMore() {
-
+        startPage += 10;
+        mVideoPresenter.getVideo(getTaskId(), id, startPage);
     }
 
     @Override
     public void onRefresh() {
-
+        startPage = 0;
+        mVideoPresenter.getVideo(getTaskId(), id, startPage);
     }
 }

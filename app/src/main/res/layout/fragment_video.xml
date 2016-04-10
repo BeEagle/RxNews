@@ -14,9 +14,11 @@
             android:id="@+id/mRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone"
             android:background="@color/app_bg_color"
-            android:cacheColorHint="@null" />
+            android:cacheColorHint="@null"
+            android:clipToPadding="false"
+            android:padding="4dp"
+            android:visibility="gone" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
