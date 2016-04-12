@@ -10,7 +10,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 
 import com.yuqirong.rxnews.R;
-import com.yuqirong.rxnews.app.AppService;
 import com.yuqirong.rxnews.app.Constant;
 import com.yuqirong.rxnews.event.NewsEvent;
 import com.yuqirong.rxnews.module.news.presenter.NewsPresenter;
@@ -107,11 +106,6 @@ public class NewsFragment extends BaseFragment implements INewsView, NewsAdapter
     @Override
     public void showLoading() {
         mProgressBar.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void getNews() {
-        AppService.getInstance().getRxCollection().getNews(getTaskId(), type, id, startPage);
     }
 
     @Override

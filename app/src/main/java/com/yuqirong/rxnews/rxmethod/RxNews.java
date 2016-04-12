@@ -108,8 +108,10 @@ public class RxNews {
                     @Override
                     public void call(List<News> news) {
                         // cache news
-                        String json = AppService.getInstance().getGson().toJson(news);
-                        cacheJSON(json, id);
+                        if(startPage == 0) {
+                            String json = AppService.getInstance().getGson().toJson(news);
+                            cacheJSON(json, id);
+                        }
                     }
                 })
                 .subscribe(new Subscriber<List<News>>() {
@@ -282,8 +284,10 @@ public class RxNews {
                     @Override
                     public void call(List<Video> videos) {
                         // cache video
-                        String json = AppService.getInstance().getGson().toJson(videos);
-                        cacheJSON(json, id);
+                        if(startPage == 0) {
+                            String json = AppService.getInstance().getGson().toJson(videos);
+                            cacheJSON(json, id);
+                        }
                     }
                 }).subscribe(new Subscriber<List<Video>>() {
                     @Override
@@ -324,7 +328,7 @@ public class RxNews {
     private static List<Video> getCacheVideos(String id) {
         ResultEntityDao resultEntityDao = AppService.getInstance().getResultEntityDao();
         ResultEntity entity = resultEntityDao.queryBuilder().where(ResultEntityDao.Properties.NId.eq(id)).unique();
-        List<Video> videos = AppService.getInstance().getGson().fromJson(entity.getJson(), new TypeToken<List<News>>() {
+        List<Video> videos = AppService.getInstance().getGson().fromJson(entity.getJson(), new TypeToken<List<Video>>() {
         }.getType());
         return videos;
     }

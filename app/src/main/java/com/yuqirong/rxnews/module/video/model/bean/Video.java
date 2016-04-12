@@ -1,10 +1,12 @@
 package com.yuqirong.rxnews.module.video.model.bean;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Created by Anyway on 2016/4/9.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Video {
 
     /**
@@ -64,5 +66,9 @@ public class Video {
     public String m3u8Url;
     @JsonProperty("ptime")
     public String ptime;
+    @JsonProperty("topicImg")
+    public String topicImg;
+    @JsonProperty("topicDesc")
+    public String topicDesc;
 
 }

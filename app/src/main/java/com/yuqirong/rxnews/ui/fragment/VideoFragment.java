@@ -8,11 +8,11 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 
 import com.yuqirong.rxnews.R;
-import com.yuqirong.rxnews.app.AppService;
 import com.yuqirong.rxnews.app.Constant;
 import com.yuqirong.rxnews.event.VideoEvent;
 import com.yuqirong.rxnews.module.video.presenter.VideoPresenter;
 import com.yuqirong.rxnews.module.video.view.IVideoView;
+import com.yuqirong.rxnews.ui.activity.VideoPlayActivity;
 import com.yuqirong.rxnews.ui.adapter.VideoAdapter;
 import com.yuqirong.rxnews.ui.view.AutoLoadRecyclerView;
 import com.yuqirong.rxnews.ui.view.SpacesItemDecoration;
@@ -94,11 +94,6 @@ public class VideoFragment extends BaseFragment implements IVideoView, VideoAdap
     }
 
     @Override
-    public void getVideo() {
-        AppService.getInstance().getRxCollection().getVideo(getTaskId(), id, startPage);
-    }
-
-    @Override
     public void showSuccess(VideoEvent videoEvent) {
         Constant.Tag tag = videoEvent.getTag();
         switch (tag) {
@@ -141,7 +136,9 @@ public class VideoFragment extends BaseFragment implements IVideoView, VideoAdap
 
     @Override
     public void onItemClick(View itemView, int position) {
-
+        Bundle bundle = new Bundle();
+        bundle.putString("videoUrl", videoAdapter.getList().get(position).mp4Url);
+        startActivity(VideoPlayActivity.class, bundle);
     }
 
     @Override

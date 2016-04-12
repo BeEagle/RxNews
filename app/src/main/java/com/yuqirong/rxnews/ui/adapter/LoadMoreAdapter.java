@@ -37,7 +37,7 @@ public abstract class LoadMoreAdapter<T> extends RecyclerView.Adapter<RecyclerVi
      */
     protected View mFooterView;
 
-    public synchronized List<T> getList() {
+    public List<T> getList() {
         return list;
     }
 

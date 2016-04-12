@@ -13,11 +13,6 @@ public interface INewsView {
     public void showLoading();
 
     /**
-     * 显示新闻列表
-     */
-    public void getNews();
-
-    /**
      * 清除progressbar
      */
     public void clearLoading();

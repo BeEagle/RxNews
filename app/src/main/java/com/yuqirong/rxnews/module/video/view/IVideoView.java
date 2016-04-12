@@ -11,8 +11,6 @@ public interface IVideoView {
 
     public void clearLoading();
 
-    public void getVideo();
-
     public void showSuccess(VideoEvent videoEvent);
 
     public void showError();
