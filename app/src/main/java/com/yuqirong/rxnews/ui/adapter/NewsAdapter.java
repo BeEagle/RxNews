@@ -14,6 +14,9 @@ import com.bumptech.glide.Glide;
 import com.yuqirong.rxnews.R;
 import com.yuqirong.rxnews.module.news.model.bean.News;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Created by Administrator on 2016/2/25.
  */
@@ -65,19 +68,20 @@ public class NewsAdapter extends LoadMoreAdapter<News> {
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
+        @Bind(R.id.iv_img)
         public ImageView iv_img;
+        @Bind(R.id.tv_title)
         public TextView tv_title;
+        @Bind(R.id.tv_time)
         public TextView tv_time;
+        @Bind(R.id.tv_content)
         public TextView tv_content;
         public Context mContext;
 
         public ViewHolder(View itemView) {
             super(itemView);
             mContext = itemView.getContext();
-            iv_img = (ImageView) itemView.findViewById(R.id.iv_img);
-            tv_title = (TextView) itemView.findViewById(R.id.tv_title);
-            tv_content = (TextView) itemView.findViewById(R.id.tv_content);
-            tv_time = (TextView) itemView.findViewById(R.id.tv_time);
+            ButterKnife.bind(this,itemView);
         }
 
     }

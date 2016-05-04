@@ -7,6 +7,11 @@ import android.content.Context;
  */
 public class DisplayUtils {
 
+    private DisplayUtils() {
+        /* cannot be instantiated */
+        throw new UnsupportedOperationException("cannot be instantiated");
+    }
+
     /**
      * 把px值转换为dip或dp值
      *
@@ -45,6 +50,7 @@ public class DisplayUtils {
 
     /**
      * 将sp值转换为px值
+     *
      * @param context
      * @param spValue
      * @return
@@ -56,20 +62,22 @@ public class DisplayUtils {
 
     /**
      * 得到屏幕的宽度
+     *
      * @param context
      * @return
      */
-    public static int getScreenWidth(Context context){
-       return  context.getResources().getDisplayMetrics().widthPixels;
+    public static int getScreenWidth(Context context) {
+        return context.getResources().getDisplayMetrics().widthPixels;
     }
 
     /**
      * 得到屏幕的高度
+     *
      * @param context
      * @return
      */
-    public static int getScreenHeight(Context context){
-        return  context.getResources().getDisplayMetrics().heightPixels;
+    public static int getScreenHeight(Context context) {
+        return context.getResources().getDisplayMetrics().heightPixels;
     }
 
 }

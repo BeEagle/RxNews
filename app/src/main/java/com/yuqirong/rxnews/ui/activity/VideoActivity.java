@@ -15,6 +15,7 @@ import com.yuqirong.rxnews.ui.adapter.FragmentAdapter;
 import com.yuqirong.rxnews.ui.fragment.FragmentFactory;
 
 import butterknife.Bind;
+import butterknife.OnClick;
 
 /**
  * Created by Anyway on 2016/4/9.
@@ -40,7 +41,6 @@ public class VideoActivity extends BaseActivity {
     @Override
     protected void initView(Bundle savedInstanceState) {
         setSupportActionBar(mToolbar);
-        mFAButton.setOnClickListener(this);
         fm = getSupportFragmentManager();
         adapter = new FragmentAdapter(fm);
         adapter.addFragment(FragmentFactory.createVideoFragment(Constant.VIDEO_HOT_ID), Constant.VIDEO_TITLE_ARRAYS[0]);
@@ -51,9 +51,13 @@ public class VideoActivity extends BaseActivity {
         mTabLayout.setupWithViewPager(mViewPager);
     }
 
-    @Override
+    @OnClick({R.id.ib_back})
     public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.fab:
 
+                break;
+        }
     }
 
     public void onEventMainThread(NewsEvent newsEvent) {

@@ -7,6 +7,7 @@
     tools:context=".ui.activity.MainActivity">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/mAppBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
@@ -28,8 +29,8 @@
             <android.support.design.widget.TabLayout
                 android:id="@+id/mTabLayout"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
                 android:layout_weight="6"
+                android:layout_height="wrap_content"
                 android:background="@color/colorPrimary"
                 app:tabMode="fixed" />
 
@@ -38,7 +39,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:backgroundTint="@android:color/transparent"
+                android:background="@android:color/transparent"
                 android:layout_weight="1"
                 android:scaleType="center"
                 android:src="@drawable/ic_arrow_down_black" />
@@ -47,28 +48,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <com.yuqirong.rxnews.ui.view.VerticalDrawerLayout
-        android:id="@+id/mVerticalDrawerLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
         <include layout="@layout/content_main" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/white"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="this is drawer"
-                android:textSize="30sp" />
-        </LinearLayout>
-
-    </com.yuqirong.rxnews.ui.view.VerticalDrawerLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

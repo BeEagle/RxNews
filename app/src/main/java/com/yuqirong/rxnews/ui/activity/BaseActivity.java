@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 
 import com.yuqirong.rxnews.app.AppService;
 import com.yuqirong.rxnews.app.MyApplication;
@@ -15,10 +14,9 @@ import cn.jpush.android.api.JPushInterface;
 /**
  * Created by Administrator on 2016/2/24.
  */
-public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener {
+public abstract class BaseActivity extends AppCompatActivity {
 
     public abstract int getContentViewId();
-
     private int mTaskId;
 
     @Override

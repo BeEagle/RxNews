@@ -1,6 +1,8 @@
 package com.yuqirong.rxnews.ui.activity;
 
+import android.animation.ObjectAnimator;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -21,13 +23,15 @@ import com.yuqirong.rxnews.app.Constant;
 import com.yuqirong.rxnews.event.VideoEvent;
 import com.yuqirong.rxnews.ui.adapter.FragmentAdapter;
 import com.yuqirong.rxnews.ui.fragment.FragmentFactory;
-import com.yuqirong.rxnews.ui.view.VerticalDrawerLayout;
 
 import butterknife.Bind;
+import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, ViewPager.OnPageChangeListener {
 
+    @Bind(R.id.mAppBarLayout)
+    AppBarLayout mAppBarLayout;
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
     @Bind(R.id.fab)
@@ -40,8 +44,6 @@ public class MainActivity extends BaseActivity
     TabLayout mTabLayout;
     @Bind(R.id.mViewPager)
     ViewPager mViewPager;
-    @Bind(R.id.mVerticalDrawerLayout)
-    VerticalDrawerLayout mVerticalDrawerLayout;
     @Bind(R.id.ib_arrow)
     ImageButton ib_arrow;
 
@@ -56,7 +58,6 @@ public class MainActivity extends BaseActivity
     @Override
     protected void initView(Bundle savedInstanceState) {
         setSupportActionBar(mToolbar);
-        mFAButton.setOnClickListener(this);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         mDrawerLayout.setDrawerListener(toggle);
@@ -70,16 +71,7 @@ public class MainActivity extends BaseActivity
         mViewPager.setAdapter(adapter);
         mViewPager.addOnPageChangeListener(this);
         mTabLayout.setupWithViewPager(mViewPager);
-        ib_arrow.setOnClickListener(this);
-        mVerticalDrawerLayout.setDrawerListener(mSimpleDrawerListener);
     }
-
-    private VerticalDrawerLayout.SimpleDrawerListener mSimpleDrawerListener = new VerticalDrawerLayout.SimpleDrawerListener() {
-        @Override
-        public void onDrawerSlide(View drawerView, float slideOffset) {
-            ib_arrow.setRotation(slideOffset * 180);
-        }
-    };
 
     @Override
     public void onBackPressed() {
@@ -118,24 +110,20 @@ public class MainActivity extends BaseActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
+        // 视频
+        if (id == R.id.nav_video) {
             startActivity(VideoActivity.class);
-        } else if (id == R.id.nav_gallery) {
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_settings) {
 
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
 
         }
-
+        item.setChecked(false);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-
         return true;
     }
 
@@ -143,7 +131,7 @@ public class MainActivity extends BaseActivity
 
     }
 
-    @Override
+    @OnClick({R.id.fab, R.id.ib_arrow})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.fab:
@@ -151,13 +139,14 @@ public class MainActivity extends BaseActivity
                         .setAction("Action", null).show();
                 break;
             case R.id.ib_arrow:
-                if (mVerticalDrawerLayout.isDrawerOpen()) {
-                    mVerticalDrawerLayout.closeDrawer();
-                    mFAButton.show();
-                } else {
-                    mVerticalDrawerLayout.openDrawerView();
-                    mFAButton.hide();
-                }
+                ObjectAnimator.ofFloat(ib_arrow, "rotationX", ib_arrow.getRotationX(), ib_arrow.getRotationX() + 180f).setDuration(500).start();
+//                if (mVerticalDrawerLayout.isDrawerOpen()) {
+//                    mVerticalDrawerLayout.closeDrawer();
+//                    mFAButton.show();
+//                } else {
+//                    mVerticalDrawerLayout.openDrawerView();
+//                    mFAButton.hide();
+//                }
                 break;
         }
     }

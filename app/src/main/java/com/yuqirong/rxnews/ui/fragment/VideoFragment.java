@@ -79,6 +79,10 @@ public class VideoFragment extends BaseFragment implements IVideoView, VideoAdap
 
     @Override
     protected void initData(Bundle savedInstanceState) {
+        // 在屏幕旋转后重新获得id
+        if(savedInstanceState !=null){
+            id = savedInstanceState.getString("id");
+        }
         isPrepared = true;
         lazyLoad();
     }
@@ -115,6 +119,12 @@ public class VideoFragment extends BaseFragment implements IVideoView, VideoAdap
                 break;
         }
         mRecyclerView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("id",id);
     }
 
     @Override

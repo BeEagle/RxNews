@@ -10,4 +10,5 @@
     <string name="str_error">好像有哪里不对！</string>
     <string name="app_name_video">视频</string>
     <string name="app_name_news">新闻</string>
+    <string name="app_settings">设置</string>
 </resources>

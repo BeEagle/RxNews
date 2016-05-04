@@ -15,6 +15,9 @@ import com.yuqirong.rxnews.R;
 import com.yuqirong.rxnews.module.video.model.bean.Video;
 import com.yuqirong.rxnews.util.DisplayUtils;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Created by Administrator on 2016/2/25.
  */
@@ -77,15 +80,16 @@ public class VideoAdapter extends LoadMoreAdapter<Video> {
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
+        @Bind(R.id.iv_album)
         public ImageView iv_album;
+        @Bind(R.id.tv_title)
         public TextView tv_title;
         public Context mContext;
 
         public ViewHolder(View itemView) {
             super(itemView);
             mContext = itemView.getContext();
-            iv_album = (ImageView) itemView.findViewById(R.id.iv_album);
-            tv_title = (TextView) itemView.findViewById(R.id.tv_title);
+            ButterKnife.bind(this,itemView);
         }
 
     }

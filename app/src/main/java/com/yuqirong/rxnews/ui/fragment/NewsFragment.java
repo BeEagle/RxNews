@@ -41,7 +41,7 @@ public class NewsFragment extends BaseFragment implements INewsView, NewsAdapter
     private int startPage = 0;
     private static final String TAG = "NewsFragment";
     public static final int[] SWIPE_REFRESH_LAYOUT_COLOR = new int[]{android.R.color.holo_red_light, android.R.color.holo_orange_light, android.R.color.holo_green_light, android.R.color.holo_blue_bright, android.R.color.holo_purple};
-
+    private boolean init;
 
     private NewsPresenter mNewsPresenter;
 
@@ -52,6 +52,16 @@ public class NewsFragment extends BaseFragment implements INewsView, NewsAdapter
 
     @Override
     protected void initView() {
+        initRecyclerView();
+        mSwipeRefreshLayout.setColorSchemeResources(SWIPE_REFRESH_LAYOUT_COLOR);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mNewsPresenter = new NewsPresenter(this);
+        if (!NetworkUtils.isConnected(mContext)) {
+            mNewsPresenter.initViews(getTaskId(), id);
+        }
+    }
+
+    private void initRecyclerView() {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         final LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getContext());
@@ -61,12 +71,6 @@ public class NewsFragment extends BaseFragment implements INewsView, NewsAdapter
         mRecyclerView.setOnLoadingMoreListener(this);
         mRecyclerView.setAdapter(mNewsAdapter);
         mNewsAdapter.setOnItemClickListener(this);
-        mSwipeRefreshLayout.setColorSchemeResources(SWIPE_REFRESH_LAYOUT_COLOR);
-        mSwipeRefreshLayout.setOnRefreshListener(this);
-        mNewsPresenter = new NewsPresenter(this);
-        if (!NetworkUtils.isConnected(mContext)) {
-            mNewsPresenter.initViews(getTaskId(), id);
-        }
     }
 
     @Override
@@ -80,7 +84,10 @@ public class NewsFragment extends BaseFragment implements INewsView, NewsAdapter
         if (!isPrepared || !isVisible) {
             return;
         }
-        mNewsPresenter.getNews(getTaskId(), type, id, startPage);
+        if (!init) {
+            mNewsPresenter.getNews(getTaskId(), type, id, startPage);
+            init = true;
+        }
     }
 
     public void onEventMainThread(NewsEvent newsEvent) {

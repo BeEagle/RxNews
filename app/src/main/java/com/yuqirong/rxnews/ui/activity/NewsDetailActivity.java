@@ -8,7 +8,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -95,11 +94,6 @@ public class NewsDetailActivity extends BaseActivity {
         mNewsDetailFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.mFrameLayout, mNewsDetailFragment, "NewsDetailFragment").commit();
-    }
-
-    @Override
-    public void onClick(View v) {
-
     }
 
     @Override
