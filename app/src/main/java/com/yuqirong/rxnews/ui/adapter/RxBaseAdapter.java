@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,11 +13,7 @@ import java.util.List;
  */
 public abstract class RxBaseAdapter<T> extends BaseAdapter {
 
-    private List<T> mList;
-
-    public RxBaseAdapter(List<T> list){
-        this.mList = list;
-    }
+    private List<T> mList = new ArrayList<>();
 
     @Override
     public int getCount() {
@@ -35,22 +32,27 @@ public abstract class RxBaseAdapter<T> extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        if(view == null){
-            view = LayoutInflater.from(viewGroup.getContext()).inflate(getItemLayout(),null);
-
-        }else{
-
+        ViewHolder viewHolder;
+        if (view == null) {
+            view = LayoutInflater.from(viewGroup.getContext()).inflate(getItemViewId(), null);
+            viewHolder = new ViewHolder(view);
+            view.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) view.getTag();
         }
-
-
-        return null;
+        getView(i, viewHolder, viewGroup);
+        return view;
     }
 
+    public abstract void getView(int i, ViewHolder viewHolder, ViewGroup viewGroup);
 
-    public abstract int getItemLayout();
 
-    static class ViewHolder{
+    public abstract int getItemViewId();
 
+    static class ViewHolder {
+        public ViewHolder(View itemView) {
+
+        }
 
     }
 

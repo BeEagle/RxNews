@@ -9,9 +9,9 @@ public class GreenDaoGeneration {
     public static void main(String[] arg0) {
 
         try {
-            Schema schema = new Schema(1, "com.yuqirong.greendao");
+            Schema schema = new Schema(2, "com.yuqirong.greendao");
             addEntity(schema);
-            new DaoGenerator().generateAll(schema, "C:/Users/h/Desktop/RxNews-master/app/src/main/java-gen");
+            new DaoGenerator().generateAll(schema, "C:/Users/h/Desktop/RxNews/app/src/main/java-gen");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -23,6 +23,12 @@ public class GreenDaoGeneration {
         entity.addIdProperty();
         entity.addStringProperty("json");
         entity.addStringProperty("nId");
+
+        Entity entity2 = schema.addEntity("ChannelEntity");
+        entity2.addIdProperty();
+        entity2.addStringProperty("name");
+        entity2.addStringProperty("tId");
+        entity2.addBooleanProperty("isSelect");
     }
 
 }

@@ -29,18 +29,18 @@
             <android.support.design.widget.TabLayout
                 android:id="@+id/mTabLayout"
                 android:layout_width="0dp"
-                android:layout_weight="6"
                 android:layout_height="wrap_content"
+                android:layout_weight="6"
                 android:background="@color/colorPrimary"
-                app:tabMode="fixed" />
+                app:tabMode="scrollable" />
 
             <ImageButton
                 android:id="@+id/ib_arrow"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@android:color/transparent"
                 android:layout_weight="1"
+                android:background="@android:color/transparent"
                 android:scaleType="center"
                 android:src="@drawable/ic_arrow_down_black" />
 
@@ -48,7 +48,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-        <include layout="@layout/content_main" />
+    <include layout="@layout/content_main" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -56,7 +56,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:layout_behavior="com.yuqirong.rxnews.ui.view.ScrollAwareFABBehavior"
-        android:src="@android:drawable/ic_dialog_email" />
+        android:src="@android:drawable/ic_dialog_email"
+        app:layout_behavior="com.yuqirong.rxnews.ui.view.ScrollAwareFABBehavior" />
 
 </android.support.design.widget.CoordinatorLayout>

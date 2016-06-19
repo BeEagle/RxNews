@@ -12,6 +12,7 @@ public class DBHelper {
     private static DBHelper mDBHelper;
     private DaoSession mDaoSession;
     private ResultEntityDao mResultEntityDao;
+    private ChannelEntityDao mChannelEntityDao;
 
     private DBHelper(Context context) {
         DaoMaster.DevOpenHelper devOpenHelper = new DaoMaster.DevOpenHelper(context,"rxnews.db",null);
@@ -19,6 +20,7 @@ public class DBHelper {
         mDaoMaster = new DaoMaster(writableDB);
         mDaoSession = mDaoMaster.newSession();
         mResultEntityDao = mDaoSession.getResultEntityDao();
+        mChannelEntityDao = mDaoSession.getChannelEntityDao();
     }
 
     public synchronized static DBHelper getInstance(Context mContext) {
@@ -34,5 +36,9 @@ public class DBHelper {
 
     public ResultEntityDao getResultEntityDao() {
         return mResultEntityDao;
+    }
+
+    public ChannelEntityDao getChannelEntityDao(){
+        return mChannelEntityDao;
     }
 }

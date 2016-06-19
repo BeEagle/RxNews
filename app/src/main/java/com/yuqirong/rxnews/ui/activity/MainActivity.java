@@ -1,6 +1,7 @@
 package com.yuqirong.rxnews.ui.activity;
 
 import android.animation.ObjectAnimator;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -13,22 +14,35 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.PopupWindow;
 
+import com.yuqirong.greendao.ChannelEntity;
+import com.yuqirong.greendao.ChannelEntityDao;
 import com.yuqirong.rxnews.R;
+import com.yuqirong.rxnews.app.AppService;
 import com.yuqirong.rxnews.app.Constant;
 import com.yuqirong.rxnews.event.VideoEvent;
+import com.yuqirong.rxnews.ui.adapter.ChannelAdapter;
 import com.yuqirong.rxnews.ui.adapter.FragmentAdapter;
+import com.yuqirong.rxnews.ui.adapter.UnselectedAdapter;
 import com.yuqirong.rxnews.ui.fragment.FragmentFactory;
+import com.yuqirong.rxnews.ui.view.DragGridView;
+
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ViewPager.OnPageChangeListener {
+        implements NavigationView.OnNavigationItemSelectedListener, ViewPager.OnPageChangeListener, AdapterView.OnItemClickListener {
 
     @Bind(R.id.mAppBarLayout)
     AppBarLayout mAppBarLayout;
@@ -49,6 +63,10 @@ public class MainActivity extends BaseActivity
 
     private FragmentManager fm;
     private FragmentAdapter adapter;
+    private List<ChannelEntity> selectList;
+    private List<ChannelEntity> unselectList;
+    private UnselectedAdapter unselectedAdapter;
+    private ChannelAdapter selectedAdapter;
 
     @Override
     public int getContentViewId() {
@@ -65,13 +83,41 @@ public class MainActivity extends BaseActivity
         mNavigationView.setNavigationItemSelectedListener(this);
         fm = getSupportFragmentManager();
         adapter = new FragmentAdapter(fm);
-        adapter.addFragment(FragmentFactory.createNewsFragment(Constant.OTHER_TYPE, Constant.FINANCE_ID), Constant.TITLE_ARRAYS[0]);
-        adapter.addFragment(FragmentFactory.createNewsFragment(Constant.OTHER_TYPE, Constant.FOOTBALL_ID), Constant.TITLE_ARRAYS[1]);
-        adapter.addFragment(FragmentFactory.createNewsFragment(Constant.OTHER_TYPE, Constant.ENTERTAINMENT_ID), Constant.TITLE_ARRAYS[2]);
+
+        List<ChannelEntity> selectChannel = getSelectChannel();
+
+        for (ChannelEntity entity : selectChannel) {
+            adapter.addFragment(FragmentFactory.createNewsFragment(Constant.OTHER_TYPE, entity.getTId()), entity.getName());
+        }
         mViewPager.setAdapter(adapter);
         mViewPager.addOnPageChangeListener(this);
         mTabLayout.setupWithViewPager(mViewPager);
     }
+
+    // 从数据库中得到选中的栏目
+    private List<ChannelEntity> getSelectChannel() {
+        ChannelEntityDao channelEntityDao = AppService.getInstance().getChannelEntityDao();
+        if (channelEntityDao.count() == 0) {
+            for (ChannelEntity c : Constant.CHANNEL_LIST) {
+                channelEntityDao.insert(c);
+            }
+        }
+        List<ChannelEntity> list = channelEntityDao.queryBuilder().where(ChannelEntityDao.Properties.IsSelect.eq(true)).list();
+        return list;
+    }
+
+    // 从数据库中得到未选中的栏目
+    private List<ChannelEntity> getUnselectChannel() {
+        ChannelEntityDao channelEntityDao = AppService.getInstance().getChannelEntityDao();
+        if (channelEntityDao.count() == 0) {
+            for (ChannelEntity c : Constant.CHANNEL_LIST) {
+                channelEntityDao.insert(c);
+            }
+        }
+        List<ChannelEntity> list = channelEntityDao.queryBuilder().where(ChannelEntityDao.Properties.IsSelect.eq(false)).list();
+        return list;
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -92,7 +138,7 @@ public class MainActivity extends BaseActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
+        // Handle action bar layout_channel_item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
@@ -108,7 +154,7 @@ public class MainActivity extends BaseActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+        // Handle navigation view layout_channel_item clicks here.
         int id = item.getItemId();
         // 视频
         if (id == R.id.nav_video) {
@@ -140,16 +186,82 @@ public class MainActivity extends BaseActivity
                 break;
             case R.id.ib_arrow:
                 ObjectAnimator.ofFloat(ib_arrow, "rotationX", ib_arrow.getRotationX(), ib_arrow.getRotationX() + 180f).setDuration(500).start();
-//                if (mVerticalDrawerLayout.isDrawerOpen()) {
-//                    mVerticalDrawerLayout.closeDrawer();
-//                    mFAButton.show();
-//                } else {
-//                    mVerticalDrawerLayout.openDrawerView();
-//                    mFAButton.hide();
-//                }
+                View channelView = LayoutInflater.from(this).inflate(R.layout.layout_channel, null);
+
+                DragGridView dgv_my_channel = (DragGridView) channelView.findViewById(R.id.dgv_my_channel);
+                GridView gv_more = (GridView) channelView.findViewById(R.id.gv_more);
+                dgv_my_channel.setOnItemClickListener(this);
+                gv_more.setOnItemClickListener(this);
+
+                dgv_my_channel.setWindowHeight(mAppBarLayout.getBottom());
+                selectList = getSelectChannel();
+
+                selectedAdapter = new ChannelAdapter(this, selectList);
+                dgv_my_channel.setAdapter(selectedAdapter);
+
+                unselectList = getUnselectChannel();
+
+                unselectedAdapter = new UnselectedAdapter(this, unselectList);
+                gv_more.setAdapter(unselectedAdapter);
+
+
+                PopupWindow popupWindow = new PopupWindow(channelView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                popupWindow.setTouchable(true);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    popupWindow.setBackgroundDrawable(getResources().getDrawable(android.R.drawable.screen_background_light, getTheme()));
+                } else {
+                    popupWindow.setBackgroundDrawable(getResources().getDrawable(android.R.drawable.screen_background_light));
+                }
+                popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                    @Override
+                    public void onDismiss() {
+                        ObjectAnimator.ofFloat(ib_arrow, "rotationX", ib_arrow.getRotationX(), ib_arrow.getRotationX() + 180f).setDuration(500).start();
+                    }
+                });
+                popupWindow.setAnimationStyle(R.style.window_anim_style);
+                popupWindow.showAsDropDown(mTabLayout);
                 break;
         }
     }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        ChannelEntity entity;
+        switch (parent.getId()) {
+            case R.id.dgv_my_channel:
+                // 数据库中更新数据
+                entity = selectList.get(position);
+                entity.setIsSelect(false);
+                AppService.getInstance().getChannelEntityDao().update(entity);
+
+                // 界面上的调整
+                selectList.remove(position);
+                selectedAdapter.notifyDataSetChanged();
+                unselectList.add(entity);
+                unselectedAdapter.notifyDataSetChanged();
+                break;
+
+            case R.id.gv_more:
+                // 数据库中更新数据
+                entity = unselectList.get(position);
+                entity.setIsSelect(true);
+                AppService.getInstance().getChannelEntityDao().update(entity);
+
+                // 界面上的调整
+                unselectList.remove(position);
+                unselectedAdapter.notifyDataSetChanged();
+                selectList.add(entity);
+                selectedAdapter.notifyDataSetChanged();
+                break;
+        }
+    }
+
+//    // 给window设置透明度
+//    private void setWindowAlpha(float alpha) {
+//        WindowManager.LayoutParams lp = getWindow().getAttributes();
+//        lp.alpha = alpha; //0.0-1.0
+//        getWindow().setAttributes(lp);
+//    }
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

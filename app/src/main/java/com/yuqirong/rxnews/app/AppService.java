@@ -1,6 +1,7 @@
 package com.yuqirong.rxnews.app;
 
 import com.google.gson.Gson;
+import com.yuqirong.greendao.ChannelEntityDao;
 import com.yuqirong.greendao.DBHelper;
 import com.yuqirong.greendao.ResultEntityDao;
 import com.yuqirong.rxnews.network.RxNewsAPI;
@@ -20,6 +21,7 @@ public class AppService {
     private RxCollection mRxCollection;
     private DBHelper mDBHelper;
     private ResultEntityDao mResultEntityDao;
+    private ChannelEntityDao mChannelEntityDao;
     private Gson mGson;
 
     private static final Object WATCH_DOG = new Object();
@@ -30,6 +32,7 @@ public class AppService {
         mRxNewsAPI = RxNewsFactory.getRxNewsAPIInstance();
         mDBHelper = DBHelper.getInstance(MyApplication.getContext());
         mResultEntityDao = mDBHelper.getResultEntityDao();
+        mChannelEntityDao = mDBHelper.getChannelEntityDao();
         mGson = new Gson();
     }
 
@@ -51,6 +54,10 @@ public class AppService {
 
     public ResultEntityDao getResultEntityDao() {
         return mResultEntityDao;
+    }
+
+    public ChannelEntityDao getChannelEntityDao() {
+        return mChannelEntityDao;
     }
 
     public Gson getGson() {

@@ -51,7 +51,7 @@ public class VideoActivity extends BaseActivity {
         mTabLayout.setupWithViewPager(mViewPager);
     }
 
-    @OnClick({R.id.ib_back})
+    @OnClick({R.id.fab})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab:

@@ -35,4 +35,9 @@
         <item name="android:backgroundDimEnabled">true</item>
     </style>
 
+    <style name="window_anim_style">
+        <item name="android:windowEnterAnimation">@anim/window_in_anim</item>
+        <item name="android:windowExitAnimation">@anim/window_out_anim</item>
+    </style>
+
 </resources>

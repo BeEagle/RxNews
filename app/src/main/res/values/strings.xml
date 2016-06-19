@@ -11,4 +11,7 @@
     <string name="app_name_video">视频</string>
     <string name="app_name_news">新闻</string>
     <string name="app_settings">设置</string>
+    <string name="str_my_channel">我的频道</string>
+    <string name="str_channel_intro">点击增删频道，长按拖拽进行排序</string>
+    <string name="str_more_channel">更多频道</string>
 </resources>

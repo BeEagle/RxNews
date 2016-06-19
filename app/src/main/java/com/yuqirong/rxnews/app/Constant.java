@@ -1,5 +1,10 @@
 package com.yuqirong.rxnews.app;
 
+import com.yuqirong.greendao.ChannelEntity;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Administrator on 2016/2/24.
  */
@@ -97,8 +102,45 @@ public class Constant {
         REFRESH, INIT, LOAD_MORE
     }
 
-    public static final String[] TITLE_ARRAYS = new String[]{"财经", "足球", "娱乐"};
+    public static final String[] VIDEO_TITLE_ARRAYS = new String[]{"热点", "娱乐", "搞笑", "精品"};
 
-    public static final String[] VIDEO_TITLE_ARRAYS = new String[]{"热点","娱乐","搞笑","精品"};
+    /**
+     * 频道
+     */
+    public static final List<ChannelEntity> CHANNEL_LIST = new ArrayList<ChannelEntity>(30) {
+        {
+            add(new ChannelEntity("头条", "T1348647909107", true));
+            add(new ChannelEntity("足球", "T1399700447917", false));
+            add(new ChannelEntity("娱乐", "T1348648517839", false));
+            add(new ChannelEntity("体育", "T1348649079062", false));
+            add(new ChannelEntity("财经", "T1348648756099", false));
+            add(new ChannelEntity("科技", "T1348649580692", false));
+            add(new ChannelEntity("电影", "T1348648650048", false));
+            add(new ChannelEntity("汽车", "T1348654060988", false));
+            add(new ChannelEntity("笑话", "T1350383429665", false));
+            add(new ChannelEntity("游戏", "T1348654151579", false));
+
+            add(new ChannelEntity("情感", "T1348650839000", false));
+            add(new ChannelEntity("精选", "T1370583240249", false));
+            add(new ChannelEntity("电台", "T1379038288239", false));
+            add(new ChannelEntity("NBA", "T1348649145984", false));
+            add(new ChannelEntity("数码", "T1348649776727", false));
+            add(new ChannelEntity("移动", "T1351233117091", false));
+            add(new ChannelEntity("彩票", "T1356600029035", false));
+            add(new ChannelEntity("教育", "T1348654225495", false));
+            add(new ChannelEntity("论坛", "T1349837670307", false));
+            add(new ChannelEntity("旅游", "T1348654204705", false));
+
+            add(new ChannelEntity("手机", "T1348649654285", false));
+            add(new ChannelEntity("博客", "T1349837698345", false));
+            add(new ChannelEntity("社会", "T1348648037603", false));
+            add(new ChannelEntity("游戏", "T1397016069906", false));
+            add(new ChannelEntity("亲子", "T1397116135282", false));
+            add(new ChannelEntity("CBA", "T1348649475931", false));
+            add(new ChannelEntity("旅游", "T1348654204705", false));
+            add(new ChannelEntity("军事", "T1348648141035", false));
+
+        }
+    };
 
 }
